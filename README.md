@@ -1,1 +1,3 @@
-# coolq-telegram-bot-x
+# CoolQ Telegram Bot X
+
+## programming...
