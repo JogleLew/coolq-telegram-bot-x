@@ -21,6 +21,7 @@
     <ClCompile Include="src\event\entry.cpp" />
     <ClCompile Include="src\event\events.cpp" />
     <ClCompile Include="src\event\filter.cpp" />
+    <ClCompile Include="src\forward\forward_constant.cpp" />
     <ClCompile Include="src\forward\pre_handler.cpp" />
     <ClCompile Include="src\forward\traffic_center.cpp" />
     <ClCompile Include="src\forward\unified_message.cpp" />
@@ -68,6 +69,7 @@
     <ClInclude Include="src\emoji_data.h" />
     <ClInclude Include="src\event\events.h" />
     <ClInclude Include="src\event\filter.h" />
+    <ClInclude Include="src\forward\forward_constant.h" />
     <ClInclude Include="src\forward\pre_handler.h" />
     <ClInclude Include="src\forward\traffic_center.h" />
     <ClInclude Include="src\forward\unified_message.h" />

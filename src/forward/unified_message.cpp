@@ -1,4 +1,5 @@
 #include "unified_message.h"
+#include "forward\forward_constant.h"
 #include "structs.h"
 #include "api\api.h"
 
@@ -126,6 +127,14 @@ void UnifiedMessage::fillQQGroupMessage(const json& payload) {
 	// fill message content
 	std::string str = payload["message"];
 	message_content = str;
+
+	// replace QQ face
+	for (nlohmann::json::iterator it = qq_emoji_list.begin(); it != qq_emoji_list.end(); ++it) {
+		std::string key = it.key();
+		std::string value = it.value();
+		boost::replace_all(message_content, "[CQ:face,id=" + key + "]", value);
+	}
+		
 }
 
 std::string UnifiedMessage::parseTextMessage() {

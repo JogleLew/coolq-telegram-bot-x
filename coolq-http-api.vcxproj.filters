@@ -180,6 +180,9 @@
     <ClCompile Include="src\forward\pre_handler.cpp">
       <Filter>src\forward</Filter>
     </ClCompile>
+    <ClCompile Include="src\forward\forward_constant.cpp">
+      <Filter>src\forward</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\cqp\def.h">
@@ -540,6 +543,9 @@
       <Filter>src\forward</Filter>
     </ClInclude>
     <ClInclude Include="src\forward\pre_handler.h">
+      <Filter>src\forward</Filter>
+    </ClInclude>
+    <ClInclude Include="src\forward\forward_constant.h">
       <Filter>src\forward</Filter>
     </ClInclude>
   </ItemGroup>
