@@ -27,6 +27,7 @@
 #include "service/hub_class.h"
 #include "utils/http_utils.h"
 #include "./filter.h"
+#include "forward\traffic_center.h"
 
 using namespace std;
 

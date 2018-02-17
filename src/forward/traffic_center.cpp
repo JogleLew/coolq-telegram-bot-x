@@ -1,5 +1,6 @@
 
 #include "app.h"
+#include "structs.h"
 #include "traffic_center.h"
 #include "unified_message.h"
 
@@ -132,16 +133,12 @@ void tg_any_message(Message::Ptr message) {
 	}
 }
 
-void qq_private_message(int32_t sub_type, int32_t msg_id, int64_t from_qq, string msg, int32_t font) {
-	
-}
-
-void qq_group_message(int32_t sub_type, int32_t msg_id, int64_t from_group, int64_t from_qq, string from_anonymous, string msg, int32_t font) {
+void qq_any_message(const json& payload) {
 	try {
 		if (forward_enable == 0)
 			return;
 		UnifiedMessage unimsg = UnifiedMessage();
-		unimsg.fillQQGroupMessage(sub_type, msg_id, from_group, from_qq, from_anonymous, msg, font);
+		unimsg.fillQQGroupMessage(payload);
 
 		if (qq_pre_handler(unimsg) == HANDLER_TERMINATE)
 			return;
@@ -156,6 +153,95 @@ void qq_group_message(int32_t sub_type, int32_t msg_id, int64_t from_group, int6
 	}
 }
 
-void qq_discuss_message(int32_t msg_id, int64_t from_discuss, int64_t from_qq, string msg, int32_t font) {
+void parse_qq_private_msg(int32_t sub_type, int32_t msg_id, int64_t from_qq, const string &msg, int32_t font) {
+	const auto sub_type_str = [&]() {
+		switch (sub_type) {
+		case 11:
+			return "friend";
+		case 1:
+			return "other";
+		case 2:
+			return "group";
+		case 3:
+			return "discuss";
+		default:
+			return "unknown";
+		}
+	}();
 
+	const json payload = {
+		{ "post_type", "message" },
+		{ "message_type", "private" },
+		{ "sub_type", sub_type_str },
+		{ "message_id", msg_id },
+		{ "user_id", from_qq },
+		{ "message", msg },
+		{ "font", font }
+	};
+
+	qq_any_message(payload);
+}
+
+void parse_qq_group_msg(int32_t sub_type, int32_t msg_id, int64_t from_group, int64_t from_qq,
+	const string &from_anonymous, const string &msg, int32_t font) {
+	string anonymous;
+	if (from_qq == 80000000 && !from_anonymous.empty()) {
+		const auto anonymous_bin = base64_decode(from_anonymous);
+		anonymous = Anonymous::from_bytes(anonymous_bin).name;
+	}
+	auto is_anonymous = !anonymous.empty();
+
+	const auto sub_type_str = [&]() {
+		if (from_qq == 80000000) {
+			return "anonymous";
+		}
+		if (from_qq == 1000000) {
+			return "notice";
+		}
+		if (sub_type == 1) {
+			return "normal";
+		}
+		return "unknown";
+	}();
+
+	string final_msg;
+	{
+		auto prefix = "&#91;" + anonymous + "&#93;:";
+		if (!anonymous.empty() && boost::starts_with(msg, prefix)) {
+			final_msg = msg.substr(prefix.length());
+		}
+		else {
+			final_msg = move(msg);
+		}
+	}
+
+	const json payload = {
+		{ "post_type", "message" },
+		{ "message_type", "group" },
+		{ "sub_type", sub_type_str },
+		{ "message_id", msg_id },
+		{ "group_id", from_group },
+		{ "user_id", from_qq },
+		{ "anonymous", anonymous },
+		{ "anonymous_flag", from_anonymous },
+		{ "message", final_msg },
+		{ "font", font }
+	};
+
+	qq_any_message(payload);
+}
+
+void parse_qq_discuss_msg(int32_t sub_type, int32_t msg_id, int64_t from_discuss, int64_t from_qq, const string &msg,
+	int32_t font) {
+	const json payload = {
+		{ "post_type", "message" },
+		{ "message_type", "discuss" },
+		{ "message_id", msg_id },
+		{ "discuss_id", from_discuss },
+		{ "user_id", from_qq },
+		{ "message", msg },
+		{ "font", font }
+	};
+
+	qq_any_message(payload);
 }

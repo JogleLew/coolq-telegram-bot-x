@@ -31,7 +31,7 @@
  */
 CQEVENT(int32_t, __event_private_msg, 24)
 (int32_t sub_type, int32_t msg_id, int64_t from_qq, const char *msg, int32_t font) {
-	qq_private_message(sub_type, msg_id, from_qq, string_from_coolq(msg), font);
+	parse_qq_private_msg(sub_type, msg_id, from_qq, string_from_coolq(msg), font);
     return event_private_msg(sub_type, msg_id, from_qq, string_from_coolq(msg), font);
 }
 
@@ -41,8 +41,9 @@ CQEVENT(int32_t, __event_private_msg, 24)
 CQEVENT(int32_t, __event_group_msg, 36)
 (int32_t sub_type, int32_t msg_id, int64_t from_group, int64_t from_qq, const char *from_anonymous, const char *msg,
  int32_t font) {
-	qq_group_message(sub_type, msg_id, from_group, from_qq, string_from_coolq(from_anonymous), string_from_coolq(msg), font);
-    return event_group_msg(sub_type, msg_id, from_group, from_qq, string_from_coolq(from_anonymous),
+	parse_qq_group_msg(sub_type, msg_id, from_group, from_qq, string_from_coolq(from_anonymous),
+		string_from_coolq(msg), font);
+	return event_group_msg(sub_type, msg_id, from_group, from_qq, string_from_coolq(from_anonymous),
                            string_from_coolq(msg), font);
 }
 
@@ -51,7 +52,7 @@ CQEVENT(int32_t, __event_group_msg, 36)
  */
 CQEVENT(int32_t, __event_discuss_msg, 32)
 (int32_t sub_type, int32_t msg_id, int64_t from_discuss, int64_t from_qq, const char *msg, int32_t font) {
-	qq_discuss_message(msg_id, from_discuss, from_qq, msg, font);
+	parse_qq_discuss_msg(sub_type, msg_id, from_discuss, from_qq, string_from_coolq(msg), font);
 	return event_discuss_msg(sub_type, msg_id, from_discuss, from_qq, string_from_coolq(msg), font);
 }
 

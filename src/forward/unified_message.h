@@ -25,7 +25,7 @@ public:
 	std::string caption = "";
 
 	void fillTelegramMessage(TgBot::Message::Ptr message);
-	void fillQQGroupMessage(int32_t sub_type, int32_t msg_id, int64_t from_group, int64_t from_qq, std::string from_anonymous, std::string msg, int32_t font);
+	void fillQQGroupMessage(const json& payload);
 	std::string parseTextMessage();
 	void sendToTelegramGroup(int64_t tg_id);
 	void sendToQQGroup(int64_t qq_id);
