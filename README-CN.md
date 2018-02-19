@@ -38,19 +38,19 @@ CoolQ Telegram Bot X 支持多种转发类型。不管是 **QQ 转发到 Telegra
 
 4. 启动酷 Q 主程序，启用插件。
 
-如需更多信息，请访问本仓库 wiki 中的安装指导页面。
+如需更多信息，请访问本仓库 wiki 中的[安装指导页面](https://github.com/JogleLew/coolq-telegram-bot-x/wiki/%E5%AE%89%E8%A3%85%E6%8C%87%E5%AF%BC)。
 
 ## 配置
 
 一般情况下，如果你需要接收来自 Telegram 群组的消息，或发送消息到 Telegram 群组，那么一个**Telegram bot token** 需要正确填写到配置文件中。接下来在配置文件中自定义**转发规则**后，CoolQ Telegram Bot X 将按照你们配置工作。
 
-如需更多信息，请访问本仓库 wiki 中的配置指导页面。
+如需更多信息，请访问本仓库 wiki 中的[配置指导页面](https://github.com/JogleLew/coolq-telegram-bot-x/wiki/%E9%85%8D%E7%BD%AE%E6%8C%87%E5%AF%BC)。
 
 ## 开发
 
 源代码为 **Visual Studio 2017 项目**，需要支持 **C++ 17** 标准的编译器才能进行编译。请使用 **Microsoft/vcpkg** 安装以下依赖项：`boost`、`cpprestsdk`、`curl`、`nlohmann-json`、`openssl`、`libiconv`.
 
-如需更多信息，请访问本仓库 wiki 中的开发指导页面。
+如需更多信息，请访问本仓库 wiki 中的[开发指导页面](https://github.com/JogleLew/coolq-telegram-bot-x/wiki/%E5%BC%80%E5%8F%91%E6%8C%87%E5%AF%BC)。
 
 如果您在使用或开发 CoolQ Telegram Bot X 中有任何的疑问，可以加入我们的 [Telegram 群](https://t.me/CoolqTelegramBot)进行讨论和交流。
 
