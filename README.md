@@ -73,7 +73,7 @@ What to choose? In short, the Python version focuses more on new features and ex
 
 CoolQ Telegram Bot X is derived from [jqqqqqqqqqq/CoolQ Telegram Bot](https://github.com/jqqqqqqqqqq/coolq-telegram-bot).
 
-CoolQ Message SDK is based on [CoolQ HTTP API](https://github.com/richardchien/coolq-http-api)
+CoolQ Message SDK is based on [richardchien/coolq-http-api](https://github.com/richardchien/coolq-http-api)
 
 Telegram C++ SDK uses the code from [reo7sp/tgbot-cpp](https://github.com/reo7sp/tgbot-cpp)
 
