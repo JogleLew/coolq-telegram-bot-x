@@ -73,6 +73,6 @@ CoolQ Telegram Bot X 支持多种转发类型。不管是 **QQ 转发到 Telegra
 
 CoolQ Telegram Bot X 派生于 [jqqqqqqqqqq/CoolQ Telegram Bot](https://github.com/jqqqqqqqqqq/coolq-telegram-bot).
 
-CoolQ Message SDK 基于 [CoolQ HTTP API](https://github.com/richardchien/coolq-http-api)
+CoolQ Message SDK 基于 [richardchien/coolq-http-api](https://github.com/richardchien/coolq-http-api)
 
 Telegram C++ SDK 使用了 [reo7sp/tgbot-cpp](https://github.com/reo7sp/tgbot-cpp) 的代码
