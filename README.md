@@ -2,6 +2,8 @@
 
 Language: 🇺🇸 English | 🇨🇳 [简体中文](https://github.com/JogleLew/coolq-telegram-bot-x/blob/master/README-CN.md)
 
+<img src="https://raw.githubusercontent.com/JogleLew/coolq-telegram-bot-x/resource/pic/logo.png" width="200">
+
 CoolQ Telegram Bot X is a message forwarding bot. This bot can help to forward messages from one [QQ](https://im.qq.com) / [Telegram](https://telegram.org/) group to another. With simple config, you can customize the forwarding logic in a convenient way. Feel free to link between QQ and Telegram, or merge different messages to one place.
 
 ## Features
