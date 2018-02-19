@@ -8,7 +8,7 @@ CoolQ Telegram Bot X 是一个消息转发机器人。它能够实现 [QQ](https
 
 #### 深度集成
 
-CoolQ Telegram Bot X 集成了 QQ 机器人和 Telegram 机器人。**[酷 Q](https://cqp.cc/) Message SDK** 保证了每一条 QQ 消息都能稳定和可靠的接收和发送。基于官方 [Telegram Bot API](https://core.telegram.org/bots/api) 的 **Telegram C++ SDK** ，强力驱动收发 Telegram 的多种消息。
+CoolQ Telegram Bot X 集成了 QQ 机器人和 Telegram 机器人。**[酷 Q](https://cqp.cc/) Message SDK** 保证了每一条 QQ 消息都能稳定和可靠的接收和发送。基于官方 [Telegram Bot API](https://core.telegram.org/bots/api) 的 **Telegram C++ SDK** ，强力驱动收发 Telegram 的多种消息。消息转发逻辑处理单元会根据转发配置，将 QQ 机器人或 Telegram 机器人接收到的消息转发到相应的群组。
 
 两个消息处理 SDK 和消息转发逻辑处理单元均被打包进一个 **酷 Q 插件**。启动酷 Q，启用 CoolQ Telegram Bot X 插件，一切就是这么简单 :)
 
