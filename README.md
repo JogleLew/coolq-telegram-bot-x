@@ -38,19 +38,19 @@ Quite easy, just follow these steps:
 
 4. Start CoolQ Main Program, enable the plugin.
 
-For more details, please visit the installation guide in repository wiki.
+For more details, please visit the [installation guide in repository wiki](https://github.com/JogleLew/coolq-telegram-bot-x/wiki/%E5%AE%89%E8%A3%85%E6%8C%87%E5%AF%BC).
 
 ## Configuration
 
 Generally, if you need message sending to / receiving from Telegram groups, a **Telegram bot token** is needed to fill in config file. Then customize the **forwarding rule** in config file, you will find the bot works functionally.
 
-For more details, please visit the configuration guide in repository wiki.
+For more details, please visit the [configuration guide in repository wiki](https://github.com/JogleLew/coolq-telegram-bot-x/wiki/%E9%85%8D%E7%BD%AE%E6%8C%87%E5%AF%BC).
 
 ## Join Development
 
 The source code is a **[Visual Studio 2017](https://www.visualstudio.com) project**, and requires a compiler supporting **C++ 17** standard. Please use **[Microsoft/vcpkg](https://github.com/Microsoft/vcpkg)** to install dependencies: `boost`、`cpprestsdk`、`curl`、`nlohmann-json`、`openssl`、`libiconv`.
 
-For more details, please visit the development guide in repository wiki.
+For more details, please visit the [development guide in repository wiki](https://github.com/JogleLew/coolq-telegram-bot-x/wiki/%E5%BC%80%E5%8F%91%E6%8C%87%E5%AF%BC).
 
 If you find some trouble in using or developing CoolQ Telegram Bot X, you can join our [Support Group (Telegram)](https://t.me/CoolqTelegramBot).
 
