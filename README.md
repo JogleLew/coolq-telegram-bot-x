@@ -8,7 +8,7 @@ CoolQ Telegram Bot X is a message forwarding bot. This bot can help to forward m
 
 #### Deep Integration
 
-CoolQ Telegram Bot X is an integration of QQ Bot and Telegram Bot. **[CoolQ](https://cqp.cc/) Message SDK** ensures the stability and availability of receiving and sending QQ messages every time. **Telegram C++ SDK** based on official [Telegram Bot API](https://core.telegram.org/bots/api) shows its power to handle different kinds of messages.
+CoolQ Telegram Bot X is an integration of QQ Bot and Telegram Bot. **[CoolQ](https://cqp.cc/) Message SDK** ensures the stability and availability of receiving and sending QQ messages every time. **Telegram C++ SDK** based on official [Telegram Bot API](https://core.telegram.org/bots/api) shows its power to handle different kinds of messages. Forwarding logic unit will parse and transfer messages which QQ Bot or Telegram Bot receive to another group according to forward config.
 
 All message SDKs and forwarding logic unit are packed into a **CoolQ plugin**. Start CoolQ, enable the plugin, and enjoy :)
 
