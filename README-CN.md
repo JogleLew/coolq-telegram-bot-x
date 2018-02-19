@@ -2,6 +2,8 @@
 
 Language: 🇺🇸 [English](https://github.com/JogleLew/coolq-telegram-bot-x/blob/master/README.md) | 🇨🇳 简体中文
 
+<img src="https://raw.githubusercontent.com/JogleLew/coolq-telegram-bot-x/resource/pic/logo.png" width="200">
+
 CoolQ Telegram Bot X 是一个消息转发机器人。它能够实现 [QQ](https://im.qq.com/) / [Telegram ](https://telegram.org/)群组之间的消息转发。仅需简单的配置，就能方便的定制属于自己的转发逻辑。想要链接 QQ 群和 Telegram 群组，或者合并多个群组的消息？一个CoolQ Telegram Bot X 就能满足你。
 
 ## 机器人特性
