@@ -14,15 +14,21 @@ CoolQ Telegram Bot X is an integration of QQ Bot and Telegram Bot. **[CoolQ](htt
 
 All message SDKs and forwarding logic unit are packed into a **CoolQ plugin**. Start CoolQ, enable the plugin, and enjoy :)
 
+<img src="https://raw.githubusercontent.com/JogleLew/coolq-telegram-bot-x/resource/pic/readme/readme-1.png" width="300">
+
 #### Multi-direction Forwarding
 
 CoolQ Telegram Bot X supports various forwarding type. No matter **QQ to Telegram**, or **Telegram to QQ**, it can parse and transfer messages correctly. Besides, **QQ to QQ** and **Telegram to Telegram** message forwarding can help you organize and merge messages from different groups.
 
 In some cases, you may need one-direction forwarding rather than bi-direction forwarding. Don't worry, CoolQ Telegram Bot X is still capable to do it.
 
+<img src="https://raw.githubusercontent.com/JogleLew/coolq-telegram-bot-x/resource/pic/readme/readme-2.png" width="300">
+
 #### Smart Message Conversion
 
 You may notice that QQ faces are special characters. CoolQ Telegram Bot X is so smart, converting QQ faces to emoji automatically when sending to Telegram group. In future work, we will support more special message conversion.
+
+<img src="https://raw.githubusercontent.com/JogleLew/coolq-telegram-bot-x/resource/pic/readme/readme-3.png" width="300">
 
 ## Installation
 
