@@ -14,15 +14,21 @@ CoolQ Telegram Bot X 集成了 QQ 机器人和 Telegram 机器人。**[酷 Q](ht
 
 两个消息处理 SDK 和消息转发逻辑处理单元均被打包进一个 **酷 Q 插件**。启动酷 Q，启用 CoolQ Telegram Bot X 插件，一切就是这么简单 :)
 
+<img src="https://raw.githubusercontent.com/JogleLew/coolq-telegram-bot-x/resource/pic/readme/readme-1.png" width="300">
+
 #### 多向转发
 
 CoolQ Telegram Bot X 支持多种转发类型。不管是 **QQ 转发到 Telegram**，还是 **Telegram 转发到 QQ**，都能正确的解析和转发消息。当然了， **QQ 转发到 QQ** 以及 **Telegram 转发到 Telegram** 同样支持，帮助你管理和合并不同群组的消息。
 
 在一些情况下，你可能需要单向消息转发，而不是双向转发。不用担心，CoolQ Telegram Bot X 贴心的考虑到了这一点，轻松胜任单向消息转发。
 
+<img src="https://raw.githubusercontent.com/JogleLew/coolq-telegram-bot-x/resource/pic/readme/readme-2.png" width="300">
+
 #### 智能转换
 
 你可能已经发现，QQ 表情是一种特殊的文字。这难不倒 CoolQ Telegram Bot X，在转发到 Telegram 群组时，它会自动将 QQ 表情转换为对应的 emoji。在未来的计划中，我们将提供更多特殊消息内容的解析和智能转换。
+
+<img src="https://raw.githubusercontent.com/JogleLew/coolq-telegram-bot-x/resource/pic/readme/readme-3.png" width="300">
 
 ## 安装
 
