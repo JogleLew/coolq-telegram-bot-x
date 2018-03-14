@@ -68,20 +68,20 @@ You know, There is a Python version:  [jqqqqqqqqqq/CoolQ Telegram Bot](https://g
 
 What to choose? In short, the Python version focuses more on new features and extensiblility, but the C++ version cares more on convenience and simple deployment.
 
-|                          | C++ Version                                       | Python Version          |
-| ------------------------ | ------------------------------------------------- | ----------------------- |
+|                          | C++ Version                              | Python Version          |
+| ------------------------ | ---------------------------------------- | ----------------------- |
 | Forwarding direction     | One-direction forwarding, bi-direction forwarding | Bi-direction forwarding |
-| Forwarding group         | QQ - Telegram, QQ - QQ, Telegram - Telegram       | QQ - Telegram           |
-| Text forwarding          | Support                                           | Support                 |
-| Picture forwarding       | Unsupport (in plan)                               | Support                 |
-| Audio forwarding         | Unsupport (in plan)                               | Partly support          |
-| Other message forwarding | Change to text message                            | Change to text message  |
+| Forwarding group         | QQ - Telegram, QQ - QQ, Telegram - Telegram | QQ - Telegram           |
+| Text forwarding          | Support                                  | Support                 |
+| Picture forwarding       | Unsupport (in plan)                      | Support                 |
+| Audio forwarding         | Unsupport (in plan)                      | Partly support          |
+| Other message forwarding | Change to text message                   | Change to text message  |
 
 ## Credit
 
 CoolQ Telegram Bot X is derived from [jqqqqqqqqqq/CoolQ Telegram Bot](https://github.com/jqqqqqqqqqq/coolq-telegram-bot).
 
-CoolQ Message SDK is based on [richardchien/coolq-http-api](https://github.com/richardchien/coolq-http-api)
+CoolQ Message SDK is based on [richardchien/coolq-cpp-sdk](https://github.com/richardchien/coolq-cpp-sdk)
 
 Telegram C++ SDK uses the code from [reo7sp/tgbot-cpp](https://github.com/reo7sp/tgbot-cpp)
 

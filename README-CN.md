@@ -68,19 +68,19 @@ CoolQ Telegram Bot X 支持多种转发类型。不管是 **QQ 转发到 Telegra
 
 你可能会在这两个版本之间犹豫。那么应该选择使用哪个版本呢？简而言之，Python 版本更关注于新的功能和更强的可扩展性，而 C++ 版本聚焦于部署和使用上的简单和便捷。
 
-|              | C++ 版本                                    | Python 版本    |
-| ------------ | ------------------------------------------- | -------------- |
-| 转发方向     | 支持单向转发，双向转发                      | 支持双向转发   |
-| 转发群组     | QQ - Telegram, QQ - QQ, Telegram - Telegram | QQ - Telegram  |
-| 文字转发     | 支持                                        | 支持           |
-| 图片转发     | 不支持 (在计划中)                           | 支持           |
-| 音频转发     | 不支持 (在计划中)                           | 部分支持       |
-| 其它消息转发 | 转换成文字消息                              | 转换成文字消息 |
+|        | C++ 版本                                   | Python 版本     |
+| ------ | ---------------------------------------- | ------------- |
+| 转发方向   | 支持单向转发，双向转发                              | 支持双向转发        |
+| 转发群组   | QQ - Telegram, QQ - QQ, Telegram - Telegram | QQ - Telegram |
+| 文字转发   | 支持                                       | 支持            |
+| 图片转发   | 不支持 (在计划中)                               | 支持            |
+| 音频转发   | 不支持 (在计划中)                               | 部分支持          |
+| 其它消息转发 | 转换成文字消息                                  | 转换成文字消息       |
 
 ## 致谢
 
 CoolQ Telegram Bot X 派生于 [jqqqqqqqqqq/CoolQ Telegram Bot](https://github.com/jqqqqqqqqqq/coolq-telegram-bot).
 
-CoolQ Message SDK 基于 [richardchien/coolq-http-api](https://github.com/richardchien/coolq-http-api)
+CoolQ Message SDK 基于 [richardchien/coolq-cpp-sdk](https://github.com/richardchien/coolq-cpp-sdk)
 
 Telegram C++ SDK 使用了 [reo7sp/tgbot-cpp](https://github.com/reo7sp/tgbot-cpp) 的代码
