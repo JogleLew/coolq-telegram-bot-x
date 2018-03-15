@@ -14,9 +14,6 @@
     <Filter Include="cqsdk\utils\vendor">
       <UniqueIdentifier>{437600e3-8fce-4a9f-b012-bc9e7e97d67f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{b5d93e5c-94b6-4e75-a8df-350bee9fd066}</UniqueIdentifier>
-    </Filter>
     <Filter Include="tgbot">
       <UniqueIdentifier>{f6a4cf90-eda8-40e9-9647-b5c4aba1e91b}</UniqueIdentifier>
     </Filter>
@@ -29,11 +26,14 @@
     <Filter Include="tgbot\types">
       <UniqueIdentifier>{4cce798c-5546-4316-8b52-1517e7cff1ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ctbx">
+      <UniqueIdentifier>{b5d93e5c-94b6-4e75-a8df-350bee9fd066}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ctbx\utils">
+      <UniqueIdentifier>{c171f6a6-2730-4dbf-900c-8c7289791df0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="demo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cqsdk\api.cpp">
       <Filter>cqsdk</Filter>
     </ClCompile>
@@ -96,6 +96,21 @@
     </ClCompile>
     <ClCompile Include="tgbot\tools\StringTools.cpp">
       <Filter>tgbot\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\main.cpp">
+      <Filter>ctbx</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\cqevent.cpp">
+      <Filter>ctbx</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\tgevent.cpp">
+      <Filter>ctbx</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\utils.cpp">
+      <Filter>ctbx\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\constant.cpp">
+      <Filter>ctbx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -383,6 +398,15 @@
     </ClInclude>
     <ClInclude Include="tgbot\tools\StringTools.h">
       <Filter>tgbot\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\ctbx.h">
+      <Filter>ctbx</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\utils.h">
+      <Filter>ctbx\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\constant.h">
+      <Filter>ctbx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

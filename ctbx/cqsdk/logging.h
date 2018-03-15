@@ -1,6 +1,9 @@
 #pragma once
 
 #include "./api.h"
+#include <mutex>
+
+static std::mutex _log_mtx;
 
 namespace cq::logging {
     enum Level {
@@ -15,8 +18,11 @@ namespace cq::logging {
     };
 
     inline int32_t log(const Level level, const std::string &tag, const std::string &msg) {
-        return api::raw::CQ_addLog(
+		_log_mtx.lock();
+        auto ans = api::raw::CQ_addLog(
             app::auth_code, level, utils::string_to_coolq(tag).c_str(), utils::string_to_coolq(msg).c_str());
+		_log_mtx.unlock();
+		return ans;
     }
 
     inline void debug(const std::string &tag, const std::string &msg) { log(DEBUG, tag, msg); }
