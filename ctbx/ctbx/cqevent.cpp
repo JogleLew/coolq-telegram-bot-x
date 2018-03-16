@@ -8,11 +8,12 @@
 #include <mutex>
 #include <chrono>
 
-namespace logging = cq::logging;
+namespace logging = ctbx::utils::logging; // 绕开CQ的原生log线程不安全的坑
 namespace exception = cq::exception;
 namespace tgevent = ctbx::tgevent;
 namespace cqevent = ctbx::cqevent;
 namespace api = cq::api;
+namespace dir = cq::dir;
 
 static std::shared_ptr<TgBot::Bot> tgbot(static_cast<TgBot::Bot*>(0));
 static bool polling = true;
@@ -63,6 +64,8 @@ namespace ctbx::cqevent {
 	}
 
 	void bot_on_enable() {
+		std::string app_dir = dir::app();
+		logging::logger_initialize(app_dir + "ctbxlog.txt");
 		logging::info(u8"Bot", u8"Bot开始初始化");
 		logging::debug(u8"TGBot", u8"开始初始化TGBot，根据网络情况需要的时间有较大区别");
 		logging::debug(u8"TGBot", u8"TGBot的Token为:" + std::to_string(BOT_TOKEN));
@@ -81,6 +84,7 @@ namespace ctbx::cqevent {
 		if(tgbot_polling_thread.joinable())
 			tgbot_polling_thread.join();
 		tgbot.reset();
+		logging::logger_drop();
 	}
 
 	void bot_on_exit() {

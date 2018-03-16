@@ -32,7 +32,7 @@
     <ClCompile Include="ctbx\cqevent.cpp" />
     <ClCompile Include="ctbx\main.cpp" />
     <ClCompile Include="ctbx\tgevent.cpp" />
-    <ClCompile Include="ctbx\utils.cpp" />
+    <ClCompile Include="ctbx\utils\utils.cpp" />
     <ClCompile Include="tgbot\Api.cpp" />
     <ClCompile Include="tgbot\EventHandler.cpp" />
     <ClCompile Include="tgbot\net\HttpClient.cpp" />
@@ -70,7 +70,7 @@
     <ClInclude Include="cqsdk\utils\vendor\base64.h" />
     <ClInclude Include="ctbx\constant.h" />
     <ClInclude Include="ctbx\ctbx.h" />
-    <ClInclude Include="ctbx\utils.h" />
+    <ClInclude Include="ctbx\utils\utils.h" />
     <ClInclude Include="tgbot\Api.h" />
     <ClInclude Include="tgbot\Bot.h" />
     <ClInclude Include="tgbot\EventBroadcaster.h" />

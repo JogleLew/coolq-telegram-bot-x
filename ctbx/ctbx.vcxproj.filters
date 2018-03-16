@@ -106,11 +106,11 @@
     <ClCompile Include="ctbx\tgevent.cpp">
       <Filter>ctbx</Filter>
     </ClCompile>
-    <ClCompile Include="ctbx\utils.cpp">
-      <Filter>ctbx\utils</Filter>
-    </ClCompile>
     <ClCompile Include="ctbx\constant.cpp">
       <Filter>ctbx</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\utils\utils.cpp">
+      <Filter>ctbx\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -402,11 +402,11 @@
     <ClInclude Include="ctbx\ctbx.h">
       <Filter>ctbx</Filter>
     </ClInclude>
-    <ClInclude Include="ctbx\utils.h">
-      <Filter>ctbx\utils</Filter>
-    </ClInclude>
     <ClInclude Include="ctbx\constant.h">
       <Filter>ctbx</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\utils\utils.h">
+      <Filter>ctbx\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

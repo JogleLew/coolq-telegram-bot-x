@@ -3,6 +3,7 @@
 #include "cqsdk/cqsdk.h"
 #include "tgbot/tgbot.h"
 #include "./constant.h"
+#include "./utils/utils.h"
 
 namespace ctbx::tgevent {
 	void bot_receive_anymessage(const TgBot::Message::Ptr);
