@@ -40,9 +40,9 @@ CoolQ Telegram Bot X 支持多种转发类型。不管是 **QQ 转发到 Telegra
 
    Linux 用户推荐直接使用 Docker 镜像 [coolq/wine-coolq](https://hub.docker.com/r/coolq/wine-coolq/builds/)。
 
-2. 从 [CoolQ Telegram Bot X 发布页](https://github.com/JogleLew/coolq-telegram-bot-x/releases) 下载 CoolQ Telegram Bot X 插件。
+2. 从 [CoolQ Telegram Bot X 发布页](https://github.com/JogleLew/coolq-telegram-bot-x/releases) 下载 CoolQ Telegram Bot X 插件和示范配置json文件。
 
-3. 将 cpk 文件放置到`酷Q根目录/app/` 中。
+3. 将 cpk 文件放置到`酷Q根目录/app/` 中，配置文件放置到`酷Q根目录/app/top.jogle.ctbx/config/`（你可能需要自己创建这个目录）。
 
 4. 启动酷 Q 主程序，启用插件。
 
@@ -56,7 +56,7 @@ CoolQ Telegram Bot X 支持多种转发类型。不管是 **QQ 转发到 Telegra
 
 ## 开发
 
-源代码为 **Visual Studio 2017 项目**，需要支持 **C++ 17** 标准的编译器才能进行编译。请使用 **Microsoft/vcpkg** 安装以下依赖项：`boost`、`cpprestsdk`、`curl`、`nlohmann-json`、`openssl`、`libiconv`.
+源代码为 **Visual Studio 2017 项目**，需要支持 **C++ 17** 标准的编译器才能进行编译。请使用 **Microsoft/vcpkg** 安装以下依赖项：`boost`、`libiconv`、`jsoncpp`.
 
 如需更多信息，请访问本仓库 wiki 中的[开发指导页面](https://github.com/JogleLew/coolq-telegram-bot-x/wiki/%E5%BC%80%E5%8F%91%E6%8C%87%E5%AF%BC)。
 

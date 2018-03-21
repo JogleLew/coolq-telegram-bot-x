@@ -40,9 +40,9 @@ Quite easy, just follow these steps:
 
    For Linux users, it is recommended to deploy Docker image from [coolq/wine-coolq](https://hub.docker.com/r/coolq/wine-coolq/builds/).
 
-2. Download CoolQ plugin from [relesase page](https://github.com/JogleLew/coolq-telegram-bot-x/releases).
+2. Download CoolQ plugin and example configuration json file from [relesase page](https://github.com/JogleLew/coolq-telegram-bot-x/releases).
 
-3. Place the cpk file to `CoolQ_Root_Directory/app/` .
+3. Place the cpk file to `CoolQ_Root_Directory/app/`  and place the json file to `CoolQ_Root_Directory/app/top.jogle.ctbx/config/`(You need to make the new directory yourself).
 
 4. Start CoolQ Main Program, enable the plugin.
 
@@ -56,7 +56,7 @@ For more details, please visit the [configuration guide in repository wiki](http
 
 ## Join Development
 
-The source code is a **[Visual Studio 2017](https://www.visualstudio.com) project**, and requires a compiler supporting **C++ 17** standard. Please use **[Microsoft/vcpkg](https://github.com/Microsoft/vcpkg)** to install dependencies: `boost`、`cpprestsdk`、`curl`、`nlohmann-json`、`openssl`、`libiconv`.
+The source code is a **[Visual Studio 2017](https://www.visualstudio.com) project**, and requires a compiler supporting **C++ 17** standard. Please use **[Microsoft/vcpkg](https://github.com/Microsoft/vcpkg)** to install dependencies: `boost`、`libiconv`、`jsoncpp`.
 
 For more details, please visit the [development guide in repository wiki](https://github.com/JogleLew/coolq-telegram-bot-x/wiki/%E5%BC%80%E5%8F%91%E6%8C%87%E5%AF%BC).
 
