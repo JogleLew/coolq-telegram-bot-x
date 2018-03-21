@@ -9,3 +9,5 @@ post_build.d.bat
 *.suo
 ipch
 !lib/*.lib
+*.json
+*.user
