@@ -1,15 +1,25 @@
 #pragma once
-#include<string>
-#include "spdlog/spdlog.h"
 
-namespace ctbx::utils::logging {
-	const std::string logger_name = "logger";
-	void logger_initialize(const std::string&, int=0, int=0);
-	void log(const spdlog::level::level_enum, const std::string&, const std::string&);
-	void info(const std::string&, const std::string&);
-	void debug(const std::string&, const std::string&);
-	void warning(const std::string&, const std::string&);
-	void error(const std::string&, const std::string&);
-	void fatal(const std::string&, const std::string&);
-	void logger_drop();
+#include<string>
+#include<stdint.h>
+#include<map>
+#include<unordered_map>
+#include<vector>
+#include<mutex>
+
+#include "spdlog/spdlog.h"
+#include "json/json.h"
+
+// split to two files?
+
+namespace ctbx::utils{
+	enum GROUP_TYPE {
+		QQ = 0,
+		TG = 1
+	};
+	typedef struct _GROUP {
+		GROUP_TYPE type;
+		int64_t group_id;
+		bool operator<(const _GROUP& a)const { return group_id < a.group_id; } // just make STL happy. :p
+	} Group, *PGroup;
 }

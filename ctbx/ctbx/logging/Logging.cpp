@@ -1,9 +1,6 @@
-#include "./utils.h"
+#include "./Logging.h"
 
-#include<memory>
-#include<string>
-
-namespace ctbx::utils::logging {
+namespace ctbx::logging {
 	static std::shared_ptr<spdlog::logger> logger(static_cast<spdlog::logger*>(0));
 	void logger_initialize(const std::string& app_dir, int hour, int minute) {
 		logger = spdlog::daily_logger_mt(logger_name, app_dir, hour, minute);

@@ -29,8 +29,20 @@
     <Filter Include="ctbx">
       <UniqueIdentifier>{b5d93e5c-94b6-4e75-a8df-350bee9fd066}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ctbx\utils">
-      <UniqueIdentifier>{c171f6a6-2730-4dbf-900c-8c7289791df0}</UniqueIdentifier>
+    <Filter Include="ctbx\types">
+      <UniqueIdentifier>{a8469b21-a0e2-46e2-a53b-6ea527b7209a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ctbx\logging">
+      <UniqueIdentifier>{4b1e1210-7ad9-44b9-a44a-8f62796fcbf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ctbx\config">
+      <UniqueIdentifier>{3da4074e-2d1b-4541-9cb9-5421b7dbec5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ctbx\cards">
+      <UniqueIdentifier>{b2c66c54-5c99-451e-8fc0-589bc8735910}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ctbx\unifiedmessage">
+      <UniqueIdentifier>{799f0335-284e-4829-9f83-13664a6342e0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -100,17 +112,20 @@
     <ClCompile Include="ctbx\main.cpp">
       <Filter>ctbx</Filter>
     </ClCompile>
-    <ClCompile Include="ctbx\cqevent.cpp">
+    <ClCompile Include="ctbx\Bot.cpp">
       <Filter>ctbx</Filter>
     </ClCompile>
-    <ClCompile Include="ctbx\tgevent.cpp">
-      <Filter>ctbx</Filter>
+    <ClCompile Include="ctbx\logging\Logging.cpp">
+      <Filter>ctbx\config</Filter>
     </ClCompile>
-    <ClCompile Include="ctbx\constant.cpp">
-      <Filter>ctbx</Filter>
+    <ClCompile Include="ctbx\config\Config.cpp">
+      <Filter>ctbx\logging</Filter>
     </ClCompile>
-    <ClCompile Include="ctbx\utils\utils.cpp">
-      <Filter>ctbx\utils</Filter>
+    <ClCompile Include="ctbx\unifiedmessage\UnifiedMessage.cpp">
+      <Filter>ctbx\unifiedmessage</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\cards\Cards.cpp">
+      <Filter>ctbx\cards</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -399,14 +414,26 @@
     <ClInclude Include="tgbot\tools\StringTools.h">
       <Filter>tgbot\tools</Filter>
     </ClInclude>
-    <ClInclude Include="ctbx\ctbx.h">
+    <ClInclude Include="ctbx\Bot.h">
       <Filter>ctbx</Filter>
     </ClInclude>
-    <ClInclude Include="ctbx\constant.h">
+    <ClInclude Include="ctbx\types\Types.h">
+      <Filter>ctbx\types</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\logging\Logging.h">
+      <Filter>ctbx\config</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\config\Config.h">
+      <Filter>ctbx\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\stdafx.h">
       <Filter>ctbx</Filter>
     </ClInclude>
-    <ClInclude Include="ctbx\utils\utils.h">
-      <Filter>ctbx\utils</Filter>
+    <ClInclude Include="ctbx\unifiedmessage\UnifiedMessage.h">
+      <Filter>ctbx\unifiedmessage</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\cards\Cards.h">
+      <Filter>ctbx\cards</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
