@@ -23,9 +23,10 @@ namespace ctbx {
 	public:
 		void bot_on_enable();
 		void qq_receive_groupmessage(const cq::event::GroupMessageEvent&);
-		void tg_receive_groupmessage(const TgBot::Message::Ptr&);
 		bool config_valid() const;
 	private:
+		void _tg_receive_groupmessage(const TgBot::Message::Ptr&);
+		void _tgbot_set_events();
 		void _tgbot_start_polling();
 	};
 }

@@ -1,4 +1,5 @@
 #include "./Bot.h"
+#include "Bot.h"
 
 namespace logging = ctbx::logging; // 绕开CQ的原生log线程不安全的坑
 namespace exception = cq::exception;
@@ -59,7 +60,7 @@ namespace ctbx {
 		logging::info(u8"Bot", u8"Bot开始初始化");
 		logging::debug(u8"TGBot", u8"开始初始化TGBot，根据网络情况需要的时间有较大区别");
 		logging::debug(u8"TGBot", u8"TGBot的Token为:" + std::to_string(_config.get_bot_token()));
-		_tgbot.getEvents().onAnyMessage([this](const auto& msg) {tg_receive_groupmessage(msg); });
+		_tgbot_set_events();
 		logging::debug(u8"TGBot", u8"TGBot初始化完成，TGBot用户名:" + _tgbot.getApi().getMe()->username);
 		_tgbot_start_polling();
 		logging::info(u8"Bot", u8"初始化完毕");
@@ -73,7 +74,10 @@ namespace ctbx {
 		}
 	}
 
-	void Bot::tg_receive_groupmessage(const TgBot::Message::Ptr& tgmsg){
+
+	bool Bot::config_valid()const { return _config.is_valid(); }
+
+	void Bot::_tg_receive_groupmessage(const TgBot::Message::Ptr& tgmsg) {
 		ctbx::message::UnifiedMessage msg(tgmsg);
 		for (auto &it : _config.get_forward_groups({ GROUP_TYPE::TG, tgmsg->chat->id })) {
 			tg_msg_log(tgmsg, it);
@@ -81,7 +85,9 @@ namespace ctbx {
 		}
 	}
 
-	bool Bot::config_valid()const { return _config.is_valid(); }
+	void Bot::_tgbot_set_events(){
+		_tgbot.getEvents().onAnyMessage([this](const auto& msg) {_tg_receive_groupmessage(msg); });
+	}
 
 	void Bot::_tgbot_start_polling() {
 		_tgbot_thread =  std::move(std::thread([this]() {
