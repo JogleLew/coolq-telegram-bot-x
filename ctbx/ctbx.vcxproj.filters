@@ -44,6 +44,9 @@
     <Filter Include="ctbx\unifiedmessage">
       <UniqueIdentifier>{799f0335-284e-4829-9f83-13664a6342e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ctbx\image">
+      <UniqueIdentifier>{9bacb53b-4e5f-47c1-bfac-59b269eac62b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cqsdk\api.cpp">
@@ -126,6 +129,10 @@
     </ClCompile>
     <ClCompile Include="ctbx\cards\Cards.cpp">
       <Filter>ctbx\cards</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\types\Types.cpp" />
+    <ClCompile Include="ctbx\image\Image.cpp">
+      <Filter>ctbx\image</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -417,9 +424,6 @@
     <ClInclude Include="ctbx\Bot.h">
       <Filter>ctbx</Filter>
     </ClInclude>
-    <ClInclude Include="ctbx\types\Types.h">
-      <Filter>ctbx\types</Filter>
-    </ClInclude>
     <ClInclude Include="ctbx\logging\Logging.h">
       <Filter>ctbx\config</Filter>
     </ClInclude>
@@ -434,6 +438,12 @@
     </ClInclude>
     <ClInclude Include="ctbx\cards\Cards.h">
       <Filter>ctbx\cards</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\types\Types.h">
+      <Filter>ctbx\types</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\image\Image.h">
+      <Filter>ctbx\image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

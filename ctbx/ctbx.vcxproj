@@ -31,6 +31,7 @@
     <ClCompile Include="ctbx\Bot.cpp" />
     <ClCompile Include="ctbx\cards\Cards.cpp" />
     <ClCompile Include="ctbx\config\Config.cpp" />
+    <ClCompile Include="ctbx\image\Image.cpp" />
     <ClCompile Include="ctbx\logging\Logging.cpp" />
     <ClCompile Include="ctbx\main.cpp" />
     <ClCompile Include="ctbx\unifiedmessage\UnifiedMessage.cpp" />
@@ -72,6 +73,7 @@
     <ClInclude Include="ctbx\Bot.h" />
     <ClInclude Include="ctbx\cards\Cards.h" />
     <ClInclude Include="ctbx\config\Config.h" />
+    <ClInclude Include="ctbx\image\Image.h" />
     <ClInclude Include="ctbx\logging\Logging.h" />
     <ClInclude Include="ctbx\stdafx.h" />
     <ClInclude Include="ctbx\types\Types.h" />

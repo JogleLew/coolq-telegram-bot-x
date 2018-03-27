@@ -3,6 +3,7 @@
 namespace types = ctbx::types;
 namespace logging = ctbx::logging;
 namespace type = ctbx::types;
+namespace image = ctbx::image;
 
 using namespace ctbx::cards;
 
@@ -22,6 +23,9 @@ namespace ctbx::message {
 			}
 			if (it.type == "text") {
 				_plain_text = it.data.at("text");
+			}
+			if (it.type == "image") {
+				_images.push_back(image::Image::get_image(it.data.at("file")));
 			}
 		}
 	}
@@ -49,6 +53,7 @@ namespace ctbx::message {
 			send_to_tg(group.group_id, bot);
 	}
 	void UnifiedMessage::send_to_qq(const int64_t group_id){
+		// TODO : add a mutex?
 		std::string text = _parse_text();
 		cq::Message msg = text;
 		try {
@@ -59,6 +64,10 @@ namespace ctbx::message {
 		}
 	}
 	void UnifiedMessage::send_to_tg(const int64_t group_id, const TgBot::Bot & bot){
+		if (!_images.empty()) {
+			for (std::size_t i = 1; i <= _images.size();i++)
+				_images[i-1].send_to_tg(group_id, bot,  std::to_string(i) + "/" + std::to_string(_images.size()));
+		}
 		std::string text = _parse_text();
 		try {
 			bot.getApi().sendMessage(group_id, text);

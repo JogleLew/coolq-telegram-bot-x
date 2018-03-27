@@ -17,11 +17,4 @@ namespace ctbx::types {
 		std::int64_t id;
 		std::string card;
 	} User, *PUser;
-	typedef struct _PHOTO {
-		GROUP_TYPE type;
-		std::int64_t id;
-		std::int32_t width;
-		std::int32_t height;
-		std::int32_t filesize;
-	} Photo, *PPhoto;
 }

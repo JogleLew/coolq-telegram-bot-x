@@ -4,6 +4,7 @@
 #include "ctbx/types/Types.h"
 #include "ctbx/logging/Logging.h"
 #include "ctbx/cards/Cards.h"
+#include "ctbx/image/Image.h"
 
 namespace ctbx::message {
 	class UnifiedMessage {
@@ -13,7 +14,7 @@ namespace ctbx::message {
 		std::shared_ptr<ctbx::types::User> _reply_to;
 		std::shared_ptr<ctbx::types::User> _forward_from;
 		std::shared_ptr<ctbx::message::UnifiedMessage> _replied_message;
-		std::shared_ptr<ctbx::types::Photo> _photo; // unimplemented
+		std::vector<ctbx::image::Image> _images;
 	public:
 		explicit UnifiedMessage(const cq::GroupMessageEvent&);
 		explicit UnifiedMessage(const TgBot::Message::Ptr&);
