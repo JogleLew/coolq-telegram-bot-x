@@ -109,8 +109,8 @@ namespace ctbx::cards {
 
 	std::string Cards::_fetch_card(int64_t group_id, int64_t user_id){
 		try {
-			logging::debug(u8"Card", std::to_string(user_id) + u8"群名片不存在，尝试单独获取");
-			cq::GroupMember member = cq::api::get_group_member_info(group_id, user_id);
+			logging::debug(u8"Card", u8"单独获取群" + std::to_string(group_id) + u8"成员" + std::to_string(user_id) + u8"的群名片");
+			cq::GroupMember member = cq::api::get_group_member_info(group_id, user_id, true);
 			std::string card = (member.card == "" ? member.nickname : member.card);
 			add_cards(group_id, user_id, card);
 			return card;
