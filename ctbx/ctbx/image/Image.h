@@ -23,21 +23,18 @@ namespace ctbx::image {
 		std::int32_t _file_size;
 		std::int32_t _add_time;
 	public:
-		static const Image get_image(const TgBot::PhotoSize::Ptr&, const TgBot::Bot&);
-		static const Image get_image(const std::string&);
+		Image(const std::string&);
+		Image(const std::string&, const std::string&);
+		Image(const TgBot::PhotoSize::Ptr&, const TgBot::Bot&);
 
 		void send_to_tg(const int64_t, const TgBot::Bot&, const std::string&);
 		void send_to_qq(const int64_t , const TgBot::Bot&);
 		void send(const ctbx::types::Group&, const TgBot::Bot&);
-
-		friend std::istream& operator>>(std::istream&, Image&);
-
+		
 	private:
 		Image();
-		Image(const std::string&);
-		Image(const std::string&, const std::string&);
-		Image(const TgBot::PhotoSize::Ptr&);
 		static void _get_root();
+		void _parse_cqimg(std::istream&);
 		void _download(const TgBot::Bot&);
 	};
 }
