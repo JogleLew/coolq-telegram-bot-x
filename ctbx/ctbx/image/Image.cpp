@@ -45,17 +45,15 @@ namespace ctbx::image {
 		_file_size = p->fileSize;
 		_height = p->height;
 		_width = p->width;
-		try {
-			std::shared_ptr<TgBot::File> img_file = tgbot.getApi().getFile(p->fileId);
-			logging::debug(u8"Image", u8"返回的file_id为" + img_file->fileId);
-			_suffix = img_file->filePath.substr(img_file->filePath.find_last_of("."));
-		}
-		catch (const TgBot::TgException& e) {
-			logging::error(u8"Image", u8"下载id为" + _id + "的图片失败，原因：" + std::string(e.what()));
-			_is_valid = false;
-			return;
-		}
-		_is_valid = true;
+		_is_valid = _get_suffix(tgbot);
+	}
+
+	Image::Image(const TgBot::Sticker::Ptr& p, const TgBot::Bot& tgbot) {
+		_id = p->fileId;
+		_file_size = p->fileSize;
+		_height = p->height;
+		_width = p->width;
+		_is_valid = _get_suffix(tgbot);
 	}
 
 	void Image::_parse_cqimg(std::istream& in) {
@@ -179,5 +177,18 @@ namespace ctbx::image {
 		}
 		std::fstream img(_file_path, std::ios::out | std::ios::binary | std::ios::trunc);
 		img << img_content;
+	}
+
+	bool Image::_get_suffix(const TgBot::Bot& tgbot) {
+		try {
+			std::shared_ptr<TgBot::File> img_file = tgbot.getApi().getFile(_id);
+			logging::debug(u8"Image", u8"返回的file_id为" + img_file->fileId);
+			_suffix = img_file->filePath.substr(img_file->filePath.find_last_of("."));
+		}
+		catch (const TgBot::TgException& e) {
+			logging::error(u8"Image", u8"下载id为" + _id + "的图片失败，原因：" + std::string(e.what()));
+			return false;
+		}
+		return true;
 	}
 }

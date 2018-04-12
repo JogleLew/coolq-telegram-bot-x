@@ -26,7 +26,7 @@ namespace ctbx::image {
 		Image(const std::string&);
 		Image(const std::string&, const std::string&);
 		Image(const TgBot::PhotoSize::Ptr&, const TgBot::Bot&);
-
+		Image(const TgBot::Sticker::Ptr&, const TgBot::Bot&);
 		void send_to_tg(const int64_t, const TgBot::Bot&, const std::string&);
 		void send_to_qq(const int64_t , const TgBot::Bot&);
 		void send(const ctbx::types::Group&, const TgBot::Bot&);
@@ -36,5 +36,6 @@ namespace ctbx::image {
 		static void _get_root();
 		void _parse_cqimg(std::istream&);
 		void _download(const TgBot::Bot&);
+		bool _get_suffix(const TgBot::Bot&);
 	};
 }
