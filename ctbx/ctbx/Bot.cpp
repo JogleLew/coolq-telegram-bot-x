@@ -45,7 +45,7 @@ namespace ctbx {
 
 	Bot::Bot(const std::string& app_dir, int32_t timeout) 
 		: _config(app_dir), _tgbot(_config.get_bot_token()),  _polling(true) {
-		Cards::start_updating(_config.get_all_from_groups());
+		
 	}
 
 	Bot::~Bot() {
@@ -60,8 +60,28 @@ namespace ctbx {
 		logging::info(u8"Bot", u8"Bot开始初始化");
 		logging::debug(u8"TGBot", u8"开始初始化TGBot，根据网络情况需要的时间有较大区别");
 		logging::debug(u8"TGBot", u8"TGBot的Token为:" + std::to_string(_config.get_bot_token()));
+		std::string bot_name;
+		try {
+			bot_name = _tgbot.getApi().getMe()->username;
+		}
+		catch (const TgBot::TgException& e) {
+			logging::debug(u8"TGBot", u8"初始化失败，原因：" + std::string(e.what()));
+			logging::info(u8"TGBot", u8"初始化失败，请尝试重新启动Bot。");
+			return;
+		}
+		catch (const std::exception& e) {
+			// 这里e.what()会乱码，待解决
+			logging::debug(u8"TGBot", u8"初始化失败，原因：" + std::string(e.what()));
+			logging::info(u8"TGBot", u8"初始化失败，请尝试重新启动Bot。");
+			return;
+		}
+		catch (...) {
+			logging::info(u8"TGBot", u8"初始化失败，请尝试重新启动Bot。");
+			return;
+		}
 		_tgbot_set_events();
-		logging::debug(u8"TGBot", u8"TGBot初始化完成，TGBot用户名:" + _tgbot.getApi().getMe()->username);
+		Cards::start_updating(_config.get_all_from_groups());
+		logging::debug(u8"TGBot", u8"TGBot初始化完成，TGBot用户名:" + bot_name);
 		_tgbot_start_polling();
 		logging::info(u8"Bot", u8"初始化完毕");
 	}
