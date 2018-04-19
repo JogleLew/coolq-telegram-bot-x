@@ -78,7 +78,7 @@ namespace ctbx {
 	bool Bot::config_valid()const { return _config.is_valid(); }
 
 	void Bot::_tg_receive_groupmessage(const TgBot::Message::Ptr& tgmsg) {
-		ctbx::message::UnifiedMessage msg(tgmsg);
+		ctbx::message::UnifiedMessage msg(tgmsg, _tgbot);
 		for (auto &it : _config.get_forward_groups({ GROUP_TYPE::TG, tgmsg->chat->id })) {
 			tg_msg_log(tgmsg, it);
 			msg.send(it, _tgbot);

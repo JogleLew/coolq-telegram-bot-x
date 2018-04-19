@@ -47,6 +47,9 @@
     <Filter Include="ctbx\image">
       <UniqueIdentifier>{9bacb53b-4e5f-47c1-bfac-59b269eac62b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ctbx\image\imageio">
+      <UniqueIdentifier>{988d6c6b-e086-4841-8ded-3aa892932747}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cqsdk\api.cpp">
@@ -130,9 +133,38 @@
     <ClCompile Include="ctbx\cards\Cards.cpp">
       <Filter>ctbx\cards</Filter>
     </ClCompile>
-    <ClCompile Include="ctbx\types\Types.cpp" />
     <ClCompile Include="ctbx\image\Image.cpp">
       <Filter>ctbx\image</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\image\imageio\image_dec.c">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\image\imageio\image_enc.c">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\image\imageio\imageio_util.c">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\image\imageio\jpegdec.c">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\image\imageio\metadata.c">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\image\imageio\pngdec.c">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\image\imageio\pnmdec.c">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\image\imageio\tiffdec.c">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\image\imageio\webpdec.c">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\image\imageio\wicdec.c">
+      <Filter>ctbx\image\imageio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -444,6 +476,39 @@
     </ClInclude>
     <ClInclude Include="ctbx\image\Image.h">
       <Filter>ctbx\image</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\unifiedmessage\UnifiedTypes.h">
+      <Filter>ctbx\unifiedmessage</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\image\imageio\image_dec.h">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\image\imageio\image_enc.h">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\image\imageio\imageio_util.h">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\image\imageio\jpegdec.h">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\image\imageio\metadata.h">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\image\imageio\pngdec.h">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\image\imageio\pnmdec.h">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\image\imageio\tiffdec.h">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\image\imageio\webpdec.h">
+      <Filter>ctbx\image\imageio</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\image\imageio\wicdec.h">
+      <Filter>ctbx\image\imageio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
