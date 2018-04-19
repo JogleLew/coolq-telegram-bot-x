@@ -32,12 +32,6 @@
     <Filter Include="ctbx\types">
       <UniqueIdentifier>{a8469b21-a0e2-46e2-a53b-6ea527b7209a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ctbx\logging">
-      <UniqueIdentifier>{4b1e1210-7ad9-44b9-a44a-8f62796fcbf8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ctbx\config">
-      <UniqueIdentifier>{3da4074e-2d1b-4541-9cb9-5421b7dbec5b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ctbx\cards">
       <UniqueIdentifier>{b2c66c54-5c99-451e-8fc0-589bc8735910}</UniqueIdentifier>
     </Filter>
@@ -49,6 +43,12 @@
     </Filter>
     <Filter Include="ctbx\image\imageio">
       <UniqueIdentifier>{988d6c6b-e086-4841-8ded-3aa892932747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ctbx\config">
+      <UniqueIdentifier>{4b1e1210-7ad9-44b9-a44a-8f62796fcbf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ctbx\logging">
+      <UniqueIdentifier>{3da4074e-2d1b-4541-9cb9-5421b7dbec5b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -122,10 +122,10 @@
       <Filter>ctbx</Filter>
     </ClCompile>
     <ClCompile Include="ctbx\logging\Logging.cpp">
-      <Filter>ctbx\config</Filter>
+      <Filter>ctbx\logging</Filter>
     </ClCompile>
     <ClCompile Include="ctbx\config\Config.cpp">
-      <Filter>ctbx\logging</Filter>
+      <Filter>ctbx\config</Filter>
     </ClCompile>
     <ClCompile Include="ctbx\unifiedmessage\UnifiedMessage.cpp">
       <Filter>ctbx\unifiedmessage</Filter>
@@ -457,10 +457,10 @@
       <Filter>ctbx</Filter>
     </ClInclude>
     <ClInclude Include="ctbx\logging\Logging.h">
-      <Filter>ctbx\config</Filter>
+      <Filter>ctbx\logging</Filter>
     </ClInclude>
     <ClInclude Include="ctbx\config\Config.h">
-      <Filter>ctbx\logging</Filter>
+      <Filter>ctbx\config</Filter>
     </ClInclude>
     <ClInclude Include="ctbx\stdafx.h">
       <Filter>ctbx</Filter>
