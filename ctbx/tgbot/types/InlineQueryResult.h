@@ -43,7 +43,8 @@ public:
 	std::string title;
 
 	/**
-	 * Optional or missing. See description of derived classes. Caption of the file to be sent, 0-200 characters
+	 * Optional or missing. See description of derived classes. 
+	 of the file to be sent, 0-200 characters
 	 */
 	std::string caption;
 
