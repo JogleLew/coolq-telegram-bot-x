@@ -119,6 +119,9 @@ namespace ctbx {
 			catch (const TgBot::TgException& e) {
 				logging::error(u8"Bot", "LongPoll错误，原因：" + std::string(e.what()));
 			}
+			catch (const std::exception& e) {
+				logging::error(u8"Bot", "LongPoll错误，原因：" + std::string(e.what()));
+			}
 		}));
 	}
 }
