@@ -67,10 +67,10 @@ namespace ctbx::message {
 	UnifiedMessage::UnifiedMessage(const TgBot::Message::Ptr& tgmsg, const TgBot::Bot& tgbot) 
 		: _unified_card(""), _image_count(0), _from({ types::GROUP_TYPE::TG,tgmsg->from->id,tgmsg->from->firstName}) {
 		if (tgmsg->forwardFrom.use_count()) {
-			_segs.emplace_back(new UForward({ types::GROUP_TYPE::TG,tgmsg->forwardFrom->id,tgmsg->forwardFrom->username }));
+			_segs.emplace_back(new UForward({ types::GROUP_TYPE::TG,tgmsg->forwardFrom->id,tgmsg->forwardFrom->firstName }));
 		}
 		if (tgmsg->replyToMessage.use_count()) {
-			_segs.emplace_back(new UReply({ types::GROUP_TYPE::TG, tgmsg->replyToMessage->from->id, tgmsg->replyToMessage->from->username }));
+			_segs.emplace_back(new UReply({ types::GROUP_TYPE::TG, tgmsg->replyToMessage->from->id, tgmsg->replyToMessage->from->firstName }));
 		}
 		if (tgmsg->sticker.use_count()) {
 			_image_count++;
