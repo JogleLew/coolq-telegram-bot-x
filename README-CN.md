@@ -74,7 +74,7 @@ CoolQ Telegram Bot X 支持多种转发类型。不管是 **QQ 转发到 Telegra
 | 转发群组     | QQ - Telegram, QQ - QQ, Telegram - Telegram | QQ - Telegram  |
 | 文字转发     | 支持                                        | 支持           |
 | 图片转发     | 支持                                        | 支持           |
-| 音频转发     | 支持                                        | 部分支持       |
+| 音频转发     | 不支持                                      | 部分支持       |
 | 其它消息转发 | 转换成文字消息                              | 转换成文字消息 |
 
 ## 致谢
