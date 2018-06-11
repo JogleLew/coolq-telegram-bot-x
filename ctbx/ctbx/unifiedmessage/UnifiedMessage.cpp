@@ -8,34 +8,34 @@ namespace image = ctbx::image;
 using namespace ctbx::cards;
 
 namespace ctbx::message {
-	UnifiedMessage::UnifiedMessage(const cq::GroupMessageEvent& cqgmsg) 
-		: _unified_card(""), _image_count(0), _from({ types::GROUP_TYPE::QQ, cqgmsg.group_id, Cards::get_card(cqgmsg.group_id, cqgmsg.user_id) }) {
+	UnifiedMessage::UnifiedMessage(const cq::GroupMessageEvent& cqgmsg)
+		: _unified_card(""), _image_count(0), _image_only(false), _from({ types::GROUP_TYPE::QQ, cqgmsg.group_id, Cards::get_card(cqgmsg.group_id, cqgmsg.user_id) }) {
 		int64_t from_group_id = cqgmsg.group_id;
 		int64_t from_user_id = cqgmsg.user_id;
 		cq::Message msg_list(cqgmsg.message);
 		for (auto it = msg_list.begin(); it != msg_list.end(); it++) {
 			if (it->type == "at") {
-					int64_t reply_qq = std::stoll(it->data.at("qq"));
-					_segs.emplace_back(
+				int64_t reply_qq = std::stoll(it->data.at("qq"));
+				_segs.emplace_back(
 					new UReply({
-							types::GROUP_TYPE::QQ,
-							reply_qq,
-							Cards::get_card(from_group_id, reply_qq)
-							}));
-					msg_list.erase(it);
-					break;
+						types::GROUP_TYPE::QQ,
+						reply_qq,
+						Cards::get_card(from_group_id, reply_qq)
+						}));
+				msg_list.erase(it);
+				break;
 			}
 		}
-		bool img_only = true;
-		for(auto&it : msg_list)
+		_image_only = true;
+		for (auto&it : msg_list)
 			if (it.type != "image") {
-				img_only = false;
+				_image_only = false;
 				break;
 			}
 		for (auto it = msg_list.begin(); it != msg_list.end();) {
 			if (it->type == "image") {
 				_segs.emplace_back(new UImage(it->data.at("file")));
-				if (!img_only) {
+				if (!_image_only) {
 					it->type = "text";
 					_image_count++;
 					it->data["text"] = "[图片" + std::to_string(_image_count) + "]";
@@ -65,8 +65,8 @@ namespace ctbx::message {
 		_debug_remaining_msg(msg_list);
 		_debug_all_segs();
 	}
-	UnifiedMessage::UnifiedMessage(const TgBot::Message::Ptr& tgmsg, const TgBot::Bot& tgbot) 
-		: _unified_card(""), _image_count(0), _from({ types::GROUP_TYPE::TG,tgmsg->from->id,tgmsg->from->firstName}) {
+	UnifiedMessage::UnifiedMessage(const TgBot::Message::Ptr& tgmsg, const TgBot::Bot& tgbot)
+		: _unified_card(""), _image_count(0), _image_only(false), _from({ types::GROUP_TYPE::TG,tgmsg->from->id,tgmsg->from->firstName }) {
 		if (tgmsg->forwardFrom.use_count()) {
 			_segs.emplace_back(new UForward({ types::GROUP_TYPE::TG,tgmsg->forwardFrom->id,tgmsg->forwardFrom->firstName }));
 		}
@@ -87,13 +87,13 @@ namespace ctbx::message {
 			_segs.emplace_back(new UPlain(tgmsg->text));
 		}
 	}
-	void UnifiedMessage::send(const ctbx::types::Group& group, const TgBot::Bot& bot){
+	void UnifiedMessage::send(const ctbx::types::Group& group, const TgBot::Bot& bot) {
 		if (group.type == types::GROUP_TYPE::QQ)
 			send_to_qq(group.group_id, bot);
 		else
 			send_to_tg(group.group_id, bot);
 	}
-	void UnifiedMessage::send_to_qq(const int64_t group_id, const TgBot::Bot& bot){
+	void UnifiedMessage::send_to_qq(const int64_t group_id, const TgBot::Bot& bot) {
 		if (_unified_card.empty())
 			_unified_card = _parse_card();
 		short image_index = 1;
@@ -103,20 +103,22 @@ namespace ctbx::message {
 				image_index++;
 			}
 		}
-		for (auto& it : _segs) {
-			if (it.type == MSG_TYPE::Plain) {
-				std::string text = _unified_card + *(it.plain);
-				cq::Message msg = text;
-				try {
-					msg.send(cq::Target(group_id, cq::Target::Type::GROUP));
-				}
-				catch (const cq::exception::ApiError& e) {
-					logging::error(u8"UnifiedMessage", u8"消息:\"" + text + u8"\"发送失败，错误原因:" + std::string(e.what()));
+		if (!_image_only) {
+			for (auto& it : _segs) {
+				if (it.type == MSG_TYPE::Plain) {
+					std::string text = _unified_card + *(it.plain);
+					cq::Message msg = text;
+					try {
+						msg.send(cq::Target(group_id, cq::Target::Type::GROUP));
+					}
+					catch (const cq::exception::ApiError& e) {
+						logging::error(u8"UnifiedMessage", u8"消息:\"" + text + u8"\"发送失败，错误原因:" + std::string(e.what()));
+					}
 				}
 			}
 		}
 	}
-	void UnifiedMessage::send_to_tg(const int64_t group_id, const TgBot::Bot & bot){
+	void UnifiedMessage::send_to_tg(const int64_t group_id, const TgBot::Bot & bot) {
 		if (_unified_card.empty())
 			_unified_card = _parse_card();
 		short image_index = 1;
@@ -127,19 +129,21 @@ namespace ctbx::message {
 				image_index++;
 			}
 		}
-		for (auto& it : _segs) {
-			if (it.type == MSG_TYPE::Plain) {
-				std::string text = _unified_card + *(it.plain);
-				try {
-					bot.getApi().sendMessage(group_id, text);
-				}
-				catch (const TgBot::TgException::exception& e) {
-					logging::error(u8"UnifiedMessage", u8"消息:\"" + text + u8"\"发送失败，错误原因:" + std::string(e.what()));
+		if (!_image_only) {
+			for (auto& it : _segs) {
+				if (it.type == MSG_TYPE::Plain) {
+					std::string text = _unified_card + *(it.plain);
+					try {
+						bot.getApi().sendMessage(group_id, text);
+					}
+					catch (const TgBot::TgException::exception& e) {
+						logging::error(u8"UnifiedMessage", u8"消息:\"" + text + u8"\"发送失败，错误原因:" + std::string(e.what()));
+					}
 				}
 			}
 		}
 	}
-	std::string UnifiedMessage::_parse_card(){
+	std::string UnifiedMessage::_parse_card() {
 		std::string text = _from.card;
 		for (auto it = _segs.begin(); it != _segs.end(); it++) {
 			if (it->type == MSG_TYPE::Reply) {
@@ -171,7 +175,7 @@ namespace ctbx::message {
 	void UnifiedMessage::_debug_all_segs() {
 		logging::debug(u8"UnifiedMessage", "打印信息片段");
 		for (auto& it : _segs) {
-			switch (it.type){
+			switch (it.type) {
 			case MSG_TYPE::Forward:
 				logging::debug(u8"UnifiedMessage", u8"Forward : " + it.forward->card);
 				break;
@@ -182,7 +186,7 @@ namespace ctbx::message {
 				logging::debug(u8"UnifiedMessage", u8"Plain : " + *(it.plain));
 				break;
 			case MSG_TYPE::Image:
-				logging::debug(u8"UnifiedMessage", u8"Image : md5="  + it.image->get_md5() + " id=" + it.image->get_id());
+				logging::debug(u8"UnifiedMessage", u8"Image : md5=" + it.image->get_md5() + " id=" + it.image->get_id());
 				break;
 			default:
 				break;

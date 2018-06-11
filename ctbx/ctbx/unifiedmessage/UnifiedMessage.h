@@ -44,6 +44,7 @@ namespace ctbx::message {
 		std::string _unified_card;
 		ctbx::types::User _from;
 		short _image_count;
+		bool _image_only;
 	public:
 		explicit UnifiedMessage(const cq::GroupMessageEvent&);
 		explicit UnifiedMessage(const TgBot::Message::Ptr&, const TgBot::Bot&);
