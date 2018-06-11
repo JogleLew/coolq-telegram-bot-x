@@ -39,9 +39,10 @@ namespace ctbx::message {
 					it->type = "text";
 					_image_count++;
 					it->data["text"] = "[图片" + std::to_string(_image_count) + "]";
-				}
-				else
+				} else {
 					it = msg_list.erase(it);
+					_image_count++;
+				}
 			}
 			else
 				it++;
