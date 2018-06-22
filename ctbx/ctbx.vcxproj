@@ -98,7 +98,6 @@
     <ClInclude Include="ctbx\stdafx.h" />
     <ClInclude Include="ctbx\types\Types.h" />
     <ClInclude Include="ctbx\unifiedmessage\UnifiedMessage.h" />
-    <ClInclude Include="ctbx\unifiedmessage\UnifiedTypes.h" />
     <ClInclude Include="tgbot\Api.h" />
     <ClInclude Include="tgbot\Bot.h" />
     <ClInclude Include="tgbot\EventBroadcaster.h" />

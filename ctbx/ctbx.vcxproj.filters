@@ -477,9 +477,6 @@
     <ClInclude Include="ctbx\image\Image.h">
       <Filter>ctbx\image</Filter>
     </ClInclude>
-    <ClInclude Include="ctbx\unifiedmessage\UnifiedTypes.h">
-      <Filter>ctbx\unifiedmessage</Filter>
-    </ClInclude>
     <ClInclude Include="ctbx\image\imageio\image_dec.h">
       <Filter>ctbx\image\imageio</Filter>
     </ClInclude>
