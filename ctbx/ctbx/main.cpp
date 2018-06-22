@@ -17,7 +17,7 @@ app::on_coolq_start = []() {
 };
 
 app::on_enable = []() {
-	std::string app_dir = cq::dir::app();
+	std::string app_dir = cq::utils::ansi(cq::dir::app());
 	if (!logger_existed) {
 		try {
 			ctbx::logging::logger_initialize(app_dir + "ctbx.log");

@@ -179,7 +179,7 @@ namespace ctbx::image {
 
 	void Image::_get_root() {
 		logging::debug(u8"Image", u8"开始获取图片目录");
-		_image_root_path = cq::dir::root();
+		_image_root_path = cq::utils::ansi(cq::dir::root());
 		_image_root_path += "data\\image\\";
 		logging::debug(u8"Image", u8"图片目录为:" + _image_root_path);
 	}
