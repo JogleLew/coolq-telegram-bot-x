@@ -181,7 +181,7 @@
     <ProjectGuid>{47F7B9D0-29A9-4094-8D84-1AE07EFE201C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ctbx</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
     <VcpkgTriplet>x86-windows-static</VcpkgTriplet>
     <VcpkgEnabled>true</VcpkgEnabled>
   </PropertyGroup>

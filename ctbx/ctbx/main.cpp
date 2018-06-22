@@ -2,28 +2,42 @@
 
 namespace app = cq::app; 
 namespace event = cq::event;
-namespace logging = cq::logging;
 
 CQ_INITIALIZE("top.jogle.ctbx");
 
 static std::shared_ptr<ctbx::Bot> pbot(static_cast<ctbx::Bot*>(0));
 
+bool logger_existed = false;
+
 CQ_MAIN{
 cq::config.convert_unicode_emoji = true; 
 
 app::on_coolq_start = []() {
-	ctbx::logging::logger_initialize(cq::dir::app() + "ctbxlog.txt");
+
 };
 
 app::on_enable = []() {
 	std::string app_dir = cq::dir::app();
+	if (!logger_existed) {
+		try {
+			ctbx::logging::logger_initialize(app_dir + "ctbx.log");
+			logger_existed = true;
+		}
+		catch (spdlog::spdlog_ex& e) {
+			cq::logging::debug(u8"CTBX", u8"spdlog初始化失败，原因：" + std::string(e.what()));
+			cq::logging::warning(u8"CTBX", u8"日志初始化失败，是不是没有给写入权限？");
+			pbot.reset();
+			logger_existed = false;
+			return;
+		}
+	}
 	pbot = std::shared_ptr<ctbx::Bot>(new ctbx::Bot(app_dir));
 	if (pbot->config_valid()) {
 		pbot->bot_on_enable();
-		logging::info(u8"CTBX", u8"Bot已启动，log文件请到APP文件夹查看");
+		cq::logging::info(u8"CTBX", u8"Bot已启动，log文件请到APP文件夹查看");
 	}
 	else {
-		logging::error(u8"CTBX", u8"Bot配置文件无效，请修改配置文件后重启Bot");
+		cq::logging::error(u8"CTBX", u8"Bot配置文件无效，请修改配置文件后重启Bot");
 		pbot.reset();
 	}
 };
@@ -33,16 +47,19 @@ event::on_group_msg = [](const auto& e) {
 		pbot->qq_receive_groupmessage(e); 
 };
 
-app::on_coolq_exit = []() {
+app::on_disable = []() {
 	if (pbot.use_count()) {
 		pbot.reset();
-		logging::info(u8"CTBX", u8"Bot已停止");
+		cq::logging::info(u8"CTBX", u8"Bot已停止");
 	}
 };
 
-app::on_disable = []() {
-	app::on_coolq_exit();
-	ctbx::logging::logger_drop();
+
+app::on_coolq_exit = []() {
+	app::on_disable();
+	if (logger_existed) {
+		ctbx::logging::logger_drop();
+	}
 };
 
 }
