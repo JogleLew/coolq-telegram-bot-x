@@ -2,10 +2,10 @@
     "ret": 1,
     "apiver": 9,
     "name": "Cool-Telegram-Bot-x",
-    "version": "10.1.0",
+    "version": "10.2.0",
     "version_id": 1,
     "author": "Mio",
-    "description": "Cool-Telegram-Bot-x×ª·¢",
+    "description": "QQ<->TG Forwading",
     "event": [
         {
             "id": 1003,
