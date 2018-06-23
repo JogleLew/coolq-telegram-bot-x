@@ -87,19 +87,21 @@ namespace ctbx::message {
 			_segs.emplace_back(new UPlain(tgmsg->text));
 		}
 	}
-	void UnifiedMessage::send(const ctbx::types::Group& group, const TgBot::Bot& bot) {
+	void UnifiedMessage::send(const ctbx::types::Group& group, const TgBot::Bot& bot, ctbx::types::GROUP_TYPE from) {
 		if (group.type == types::GROUP_TYPE::QQ)
-			send_to_qq(group.group_id, bot);
+			send_to_qq(group.group_id, bot, from);
 		else
-			send_to_tg(group.group_id, bot);
+			send_to_tg(group.group_id, bot, from);
 	}
-	void UnifiedMessage::send_to_qq(const int64_t group_id, const TgBot::Bot& bot) {
+	void UnifiedMessage::send_to_qq(const int64_t group_id, const TgBot::Bot& bot, ctbx::types::GROUP_TYPE from) {
 		if (_unified_card.empty())
 			_unified_card = _parse_card();
 		short image_index = 1;
 		for (auto& it : _segs) {
 			if (it.type == MSG_TYPE::Image) {
-				it.image->send_to_qq(group_id, bot, _unified_card + "(" + std::to_string(image_index) + "/" + std::to_string(_image_count) + ")");
+				if(!it.image->send_to_qq(group_id, bot, _unified_card + "(" + std::to_string(image_index) + "/" + std::to_string(_image_count) + ")", from)){
+					cq::api::send_group_msg(group_id, "[图片" +  std::to_string(image_index) + "拉取失败]");
+				}
 				image_index++;
 			}
 		}
@@ -118,14 +120,16 @@ namespace ctbx::message {
 			}
 		}
 	}
-	void UnifiedMessage::send_to_tg(const int64_t group_id, const TgBot::Bot & bot) {
+	void UnifiedMessage::send_to_tg(const int64_t group_id, const TgBot::Bot & bot, ctbx::types::GROUP_TYPE from) {
 		if (_unified_card.empty())
 			_unified_card = _parse_card();
 		short image_index = 1;
 		for (auto& it : _segs) {
 			if (it.type == MSG_TYPE::Image) {
 				std::string cap = _unified_card + "(" + std::to_string(image_index) + "/" + std::to_string(_image_count) + ")";
-				it.image->send_to_tg(group_id, bot, cap);
+				if (!it.image->send_to_tg(group_id, bot, cap, from)) {
+					bot.getApi().sendMessage(group_id, "[图片" + std::to_string(image_index) + "拉取失败]");
+				}
 				image_index++;
 			}
 		}

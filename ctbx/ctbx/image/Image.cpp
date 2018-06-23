@@ -4,6 +4,12 @@ namespace logging = ctbx::logging;
 
 namespace ctbx::image {
 
+	/*
+		受不了了
+		迟早要重构
+		2018/6/23
+	*/
+
 	std::string Image::_image_root_path = "";
 	std::map<std::string, std::string> Image::_tg_cache = {};
 	std::map < std::string, std::string > Image::_cq_cache = {};
@@ -103,57 +109,87 @@ namespace ctbx::image {
 		return;
 	}
 
-	void Image::send_to_tg(const int64_t chat_id, const TgBot::Bot& tgbot, const std::string& caption){
+	bool Image::send_to_tg(const int64_t chat_id, const TgBot::Bot& tgbot, const std::string& caption, const types::GROUP_TYPE from){
 		logging::info(u8"Image", u8"开始发送md5为" + _md5 + "的图片");
 		if (!_is_valid) {
 			logging::warning(u8"Image", u8"无效的图片发送！md5=" + _md5 + " _id:" + _id);
-			return;
+			return false;
 		}
-		if (_cq_cache.count(_md5)) {
+		auto send_impl = [&](const std::string& id) {
 			try {
-				tgbot.getApi().sendPhoto(chat_id, _cq_cache[_md5], caption);
+				tgbot.getApi().sendPhoto(chat_id, id, caption);
 			}
 			catch (const TgBot::TgException& e) {
-				try {
-					tgbot.getApi().sendDocument(chat_id, _cq_cache[_md5], caption);
+				tgbot.getApi().sendDocument(chat_id, id, caption);
+			}
+		};
+		if (_cq_cache.count(_md5)) {
+			try {
+				send_impl(_cq_cache.at(_md5));
+				return true;
+			}
+			catch (const TgBot::TgException& e) {
+				logging::error(u8"Image", u8"发送md5为" + _md5 + "的已缓存图片失败，原因：" + std::string(e.what()));
+				_cq_cache.erase(_cq_cache.find(_md5));
+				return false;
+			}
+		}
+		else if (from == types::GROUP_TYPE::TG && !_id.empty()) {
+			try {
+				send_impl(_id);
+				return true;
+			}
+			catch (const TgBot::TgException& e) {
+				logging::error(u8"Image", u8"发送id为" + _id + "的图片失败，原因：" + std::string(e.what()));
+				return false;
+			}
+		}
+		else {
+			if (!_download(tgbot))
+				return false;
+			try {
+				TgBot::Message::Ptr new_message;
+				if (_suffix != ".gif") {
+					new_message = tgbot.getApi().sendPhoto(chat_id,
+						TgBot::InputFile::fromFile(_file_path, _mimetype.at(_suffix)), caption);
+					_cq_cache[_md5] = (*(new_message->photo.rbegin()))->fileId;
 				}
-				catch (const TgBot::TgException& e) {
-					logging::error(u8"Image", u8"发送md5为" + _md5 + "的已缓存图片失败，原因：" + std::string(e.what()));
+				else {
+					new_message = tgbot.getApi().sendDocument(chat_id,
+						TgBot::InputFile::fromFile(_file_path, _mimetype.at(_suffix)), caption);
+					_cq_cache[_md5] = new_message->document->fileId;
 				}
+				return true;
 			}
-			return;
-		}
-		_download(tgbot);
-		try {
-			TgBot::Message::Ptr new_message;
-			if (_suffix != ".gif") {
-				new_message = tgbot.getApi().sendPhoto(chat_id,
-					TgBot::InputFile::fromFile(_file_path, _mimetype.at(_suffix)), caption);
-				_cq_cache[_md5] = (*(new_message->photo.rbegin()))->fileId;
+			catch (const TgBot::TgException& e) {
+				logging::error(u8"Image", u8"发送md5为" + _md5 + "的图片失败，原因：" + std::string(e.what()));
+				return false;
 			}
-			else {
-				new_message = tgbot.getApi().sendDocument(chat_id,
-					TgBot::InputFile::fromFile(_file_path, _mimetype.at(_suffix)), caption);
-				_cq_cache[_md5] = new_message->document->fileId;
+			catch (const std::out_of_range& e) {
+				logging::error(u8"Image", u8"返回的图片id获取失败！原因:" + std::string(e.what()));
+				return false;
 			}
-		}
-		catch (const TgBot::TgException& e) {
-			logging::error(u8"Image", u8"发送md5为" + _md5 + "的图片失败，原因：" + std::string(e.what()));
-		}
-		catch (const std::out_of_range& e) {
-			logging::error(u8"Image", u8"返回的图片id获取失败！原因:" + std::string(e.what()));
 		}
 	}
 
-	void Image::send_to_qq(const int64_t group_id, const TgBot::Bot& tgbot, const std::string& caption){
+	bool Image::send_to_qq(const int64_t group_id, const TgBot::Bot& tgbot, const std::string& caption, const types::GROUP_TYPE from){
 		// TODO : 对于QQ可以考虑在一条消息内发送多个图片
 		logging::info(u8"Image", u8"开始发送id为" + _id + "的图片");
 		if (!_is_valid) {
 			logging::warning(u8"Image", u8"无效的图片发送！md5=" + _md5 + " _id:" + _id);
-			return;
+			return false;
 		}
-		_download(tgbot);
-		cq::MessageSegment img_seg = cq::MessageSegment::image(_id + _suffix);
+		std::string file_name;
+		if (from == types::GROUP_TYPE::QQ) {
+			file_name = _md5 + _suffix;
+		}
+		else if (!_download(tgbot)) {
+			return false;
+		}
+		else {
+			file_name = _id + _suffix;
+		}
+		cq::MessageSegment img_seg = cq::MessageSegment::image(file_name);
 		cq::Message img_msg;
 		if (!caption.empty())
 			img_msg += caption;
@@ -163,15 +199,16 @@ namespace ctbx::image {
 		}
 		catch (const cq::exception::ApiError& e) {
 			logging::error(u8"Image", u8"发送id为" + _id + "路径为" + _file_path + "的图片失败，原因" + std::string(e.what()));
+			return false;
 		}
-		return;
+		return true;
 	}
 
-	void Image::send(const ctbx::types::Group& group, const TgBot::Bot& tgbot, const std::string& caption=""){
+	bool Image::send(const ctbx::types::Group& group, const TgBot::Bot& tgbot, const std::string& caption="", const types::GROUP_TYPE from = types::GROUP_TYPE::TG){
 		if (group.type == ctbx::types::GROUP_TYPE::QQ)
-			send_to_qq(group.group_id, tgbot, caption);
+			return send_to_qq(group.group_id, tgbot, caption, from);
 		else
-			send_to_tg(group.group_id, tgbot, caption);
+			return send_to_tg(group.group_id, tgbot, caption, from);
 	}
 
 	std::string Image::get_md5() { return _md5; }
@@ -184,11 +221,11 @@ namespace ctbx::image {
 		logging::debug(u8"Image", u8"图片目录为:" + _image_root_path);
 	}
 
-	void Image::_download(const TgBot::Bot& tgbot) {
+	bool Image::_download(const TgBot::Bot& tgbot) {
 		if (!_is_valid)
-			return;
+			return false;
 		if (!_md5.empty() && !_id.empty())
-			return;
+			return false;
 		std::string img_content;
 		if (_md5.empty()) {
 			logging::debug(u8"Image", u8"开始下载id为" + _id + "的TG图片");
@@ -199,25 +236,40 @@ namespace ctbx::image {
 				logging::debug(u8"Image", u8"完整文件路径：" + _file_path);
 				if (_suffix == ".webp") {
 					_is_valid = _convert_webp(img_content);
-					return;
+					return _is_valid;
 				}
 			}
 			catch (const TgBot::TgException& e) {
 				logging::error(u8"Image", u8"下载id为" + _id + "的图片失败，原因：" + std::string(e.what()));
+				_is_valid = false;
+				return false;
+			}
+			catch (const std::exception& e) {
+				logging::error(u8"Image", u8"下载id为" + _id + "的图片失败，原因：" + std::string(e.what()));
+				_is_valid = false;
+				return false;
 			}
 		}
 		else if (_id.empty()) {
 			logging::debug(u8"Image", u8"开始下载md5为" + _md5 + "的QQ图片");
-			img_content = TgBot::HttpClient::getInstance().makeRequest(_url, std::vector<TgBot::HttpReqArg>());
-			_file_path = _image_root_path + _md5 + _suffix;
-			logging::debug(u8"Image", u8"完整文件路径：" + _file_path);
+			try {
+				img_content = TgBot::HttpClient::getInstance().makeRequest(_url, std::vector<TgBot::HttpReqArg>());
+				_file_path = _image_root_path + _md5 + _suffix;
+				logging::debug(u8"Image", u8"完整文件路径：" + _file_path);
+			}
+			catch (const std::exception& e) {
+				logging::error(u8"Image", u8"下载md5为" + _md5 + "的图片失败，原因：" + std::string(e.what()));
+				_is_valid = false;
+				return false;
+			}
 		}
 		std::fstream img(_file_path, std::ios::out | std::ios::binary | std::ios::trunc);
 		img << img_content;
+		return true;
 	}
 
 	bool Image::_convert_webp(const std::string& img_content) {
-		std::string tmp_dir = cq::dir::app_tmp();
+		std::string tmp_dir = cq::utils::ansi(cq::dir::app_tmp());
 		_file_path = tmp_dir + _id + _suffix;
 		std::fstream img(_file_path, std::ios::out | std::ios::binary | std::ios::trunc);
 		img << img_content;

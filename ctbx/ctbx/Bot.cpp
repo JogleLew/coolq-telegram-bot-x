@@ -65,18 +65,20 @@ namespace ctbx {
 			bot_name = _tgbot.getApi().getMe()->username;
 		}
 		catch (const TgBot::TgException& e) {
-			logging::debug(u8"TGBot", u8"初始化失败，原因：" + std::string(e.what()));
+			logging::debug(u8"TGBot", u8"初始化失败，原因：" + cq::utils::string_decode(std::string(e.what()), cq::utils::Encoding::ANSI));
 			logging::info(u8"TGBot", u8"初始化失败，请尝试重新启动Bot。");
+			cq::logging::info(u8"TGBot", u8"初始化失败，请尝试重新启动Bot。");
 			return;
 		}
 		catch (const std::exception& e) {
-			// 这里e.what()会乱码，待解决
-			logging::debug(u8"TGBot", u8"初始化失败，原因：" + std::string(e.what()));
+			logging::debug(u8"TGBot", u8"初始化失败，原因：" + cq::utils::string_decode(std::string(e.what()), cq::utils::Encoding::ANSI));
 			logging::info(u8"TGBot", u8"初始化失败，请尝试重新启动Bot。");
+			cq::logging::warning(u8"TGBot", u8"初始化失败，请尝试重新启动Bot。");
 			return;
 		}
 		catch (...) {
 			logging::info(u8"TGBot", u8"初始化失败，请尝试重新启动Bot。");
+			cq::logging::info(u8"TGBot", u8"初始化失败，请尝试重新启动Bot。");
 			return;
 		}
 		_tgbot_set_events();
@@ -87,10 +89,10 @@ namespace ctbx {
 	}
 
 	void Bot::qq_receive_groupmessage(const cq::event::GroupMessageEvent & e){
-		ctbx::message::UnifiedMessage msg(e);
 		for (auto &it : _config.get_forward_groups({ GROUP_TYPE::QQ, e.group_id })) {
+			ctbx::message::UnifiedMessage msg(e);
 			cq_msg_log(e, it);
-			msg.send(it, _tgbot);
+			msg.send(it, _tgbot, ctbx::types::GROUP_TYPE::QQ);
 		}
 	}
 
@@ -98,10 +100,10 @@ namespace ctbx {
 	bool Bot::config_valid()const { return _config.is_valid(); }
 
 	void Bot::_tg_receive_groupmessage(const TgBot::Message::Ptr& tgmsg) {
-		ctbx::message::UnifiedMessage msg(tgmsg, _tgbot);
 		for (auto &it : _config.get_forward_groups({ GROUP_TYPE::TG, tgmsg->chat->id })) {
+			ctbx::message::UnifiedMessage msg(tgmsg, _tgbot);
 			tg_msg_log(tgmsg, it);
-			msg.send(it, _tgbot);
+			msg.send(it, _tgbot, ctbx::types::GROUP_TYPE::TG);
 		}
 	}
 
