@@ -8,6 +8,9 @@ namespace ctbx::image {
 		受不了了
 		迟早要重构
 		2018/6/23
+
+		啊，好菜的C++
+		2018/6/27
 	*/
 
 	std::string Image::_image_root_path = "";
@@ -307,9 +310,14 @@ namespace ctbx::image {
 		try {
 			std::shared_ptr<TgBot::File> img_file = tgbot.getApi().getFile(_id);
 			logging::debug(u8"Image", u8"返回的file_id为" + img_file->fileId);
+			logging::debug(u8"Image", u8"返回的file_path为" + img_file->filePath);
 			_suffix = img_file->filePath.substr(img_file->filePath.find_last_of("."));
 		}
 		catch (const TgBot::TgException& e) {
+			logging::error(u8"Image", u8"下载id为" + _id + "的图片失败，原因：" + std::string(e.what()));
+			return false;
+		}
+		catch (const std::exception& e) {
 			logging::error(u8"Image", u8"下载id为" + _id + "的图片失败，原因：" + std::string(e.what()));
 			return false;
 		}
