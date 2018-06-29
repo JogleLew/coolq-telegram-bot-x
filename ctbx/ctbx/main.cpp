@@ -2,6 +2,9 @@
 
 namespace app = cq::app; 
 namespace event = cq::event;
+namespace config = ctbx::config;
+
+using config::Config;
 
 CQ_INITIALIZE("top.jogle.ctbx");
 
@@ -31,8 +34,10 @@ app::on_enable = []() {
 			return;
 		}
 	}
-	pbot = std::shared_ptr<ctbx::Bot>(new ctbx::Bot(app_dir));
-	if (pbot->config_valid()) {
+	Config& config = Config::get_config();
+	config.reload();
+	if(config.is_valid()){
+		pbot = std::shared_ptr<ctbx::Bot>(new ctbx::Bot());
 		pbot->bot_on_enable();
 		cq::logging::info(u8"CTBX", u8"Bot已启动，log文件请到APP文件夹查看");
 	}

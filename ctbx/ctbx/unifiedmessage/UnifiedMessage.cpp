@@ -9,7 +9,7 @@ using namespace ctbx::cards;
 
 namespace ctbx::message {
 	UnifiedMessage::UnifiedMessage(const cq::GroupMessageEvent& cqgmsg)
-		: _unified_card(""), _image_count(0), _image_only(false), _from({ types::GROUP_TYPE::QQ, cqgmsg.group_id, Cards::get_card(cqgmsg.group_id, cqgmsg.user_id) }) {
+		: _unified_card(""), _image_count(0), _image_only(false), _from({ types::SOFTWARE_TYPE::QQ, cqgmsg.group_id, Cards::get_card(cqgmsg.group_id, cqgmsg.user_id) }) {
 		int64_t from_group_id = cqgmsg.group_id;
 		int64_t from_user_id = cqgmsg.user_id;
 		cq::Message msg_list(cqgmsg.message);
@@ -18,7 +18,7 @@ namespace ctbx::message {
 				int64_t reply_qq = std::stoll(it->data.at("qq"));
 				_segs.emplace_back(
 					new UReply({
-						types::GROUP_TYPE::QQ,
+						types::SOFTWARE_TYPE::QQ,
 						reply_qq,
 						Cards::get_card(from_group_id, reply_qq)
 						}));
@@ -66,12 +66,12 @@ namespace ctbx::message {
 		_debug_all_segs();
 	}
 	UnifiedMessage::UnifiedMessage(const TgBot::Message::Ptr& tgmsg, const TgBot::Bot& tgbot)
-		: _unified_card(""), _image_count(0), _image_only(false), _from({ types::GROUP_TYPE::TG,tgmsg->from->id,tgmsg->from->firstName }) {
+		: _unified_card(""), _image_count(0), _image_only(false), _from({ types::SOFTWARE_TYPE::TG,tgmsg->from->id,tgmsg->from->firstName }) {
 		if (tgmsg->forwardFrom.use_count()) {
-			_segs.emplace_back(new UForward({ types::GROUP_TYPE::TG,tgmsg->forwardFrom->id,tgmsg->forwardFrom->firstName }));
+			_segs.emplace_back(new UForward({ types::SOFTWARE_TYPE::TG,tgmsg->forwardFrom->id,tgmsg->forwardFrom->firstName }));
 		}
 		if (tgmsg->replyToMessage.use_count()) {
-			_segs.emplace_back(new UReply({ types::GROUP_TYPE::TG, tgmsg->replyToMessage->from->id, tgmsg->replyToMessage->from->firstName }));
+			_segs.emplace_back(new UReply({ types::SOFTWARE_TYPE::TG, tgmsg->replyToMessage->from->id, tgmsg->replyToMessage->from->firstName }));
 		}
 		if (tgmsg->sticker.use_count()) {
 			_image_count++;
@@ -87,13 +87,13 @@ namespace ctbx::message {
 			_segs.emplace_back(new UPlain(tgmsg->text));
 		}
 	}
-	void UnifiedMessage::send(const ctbx::types::Group& group, const TgBot::Bot& bot, ctbx::types::GROUP_TYPE from) {
-		if (group.type == types::GROUP_TYPE::QQ)
+	void UnifiedMessage::send(const ctbx::types::Group& group, const TgBot::Bot& bot, ctbx::types::SOFTWARE_TYPE from) {
+		if (group.type == types::SOFTWARE_TYPE::QQ)
 			send_to_qq(group.group_id, bot, from);
 		else
 			send_to_tg(group.group_id, bot, from);
 	}
-	void UnifiedMessage::send_to_qq(const int64_t group_id, const TgBot::Bot& bot, ctbx::types::GROUP_TYPE from) {
+	void UnifiedMessage::send_to_qq(const int64_t group_id, const TgBot::Bot& bot, ctbx::types::SOFTWARE_TYPE from) {
 		if (_unified_card.empty())
 			_unified_card = _parse_card();
 		short image_index = 1;
@@ -120,7 +120,7 @@ namespace ctbx::message {
 			}
 		}
 	}
-	void UnifiedMessage::send_to_tg(const int64_t group_id, const TgBot::Bot & bot, ctbx::types::GROUP_TYPE from) {
+	void UnifiedMessage::send_to_tg(const int64_t group_id, const TgBot::Bot & bot, ctbx::types::SOFTWARE_TYPE from) {
 		if (_unified_card.empty())
 			_unified_card = _parse_card();
 		short image_index = 1;

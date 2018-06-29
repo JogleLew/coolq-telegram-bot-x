@@ -112,7 +112,7 @@ namespace ctbx::image {
 		return;
 	}
 
-	bool Image::send_to_tg(const int64_t chat_id, const TgBot::Bot& tgbot, const std::string& caption, const types::GROUP_TYPE from){
+	bool Image::send_to_tg(const int64_t chat_id, const TgBot::Bot& tgbot, const std::string& caption, const types::SOFTWARE_TYPE from){
 		logging::info(u8"Image", u8"开始发送md5为" + _md5 + "的图片");
 		if (!_is_valid) {
 			logging::warning(u8"Image", u8"无效的图片发送！md5=" + _md5 + " _id:" + _id);
@@ -137,7 +137,7 @@ namespace ctbx::image {
 				return false;
 			}
 		}
-		else if (from == types::GROUP_TYPE::TG && !_id.empty()) {
+		else if (from == types::SOFTWARE_TYPE::TG && !_id.empty()) {
 			try {
 				send_impl(_id);
 				return true;
@@ -175,7 +175,7 @@ namespace ctbx::image {
 		}
 	}
 
-	bool Image::send_to_qq(const int64_t group_id, const TgBot::Bot& tgbot, const std::string& caption, const types::GROUP_TYPE from){
+	bool Image::send_to_qq(const int64_t group_id, const TgBot::Bot& tgbot, const std::string& caption, const types::SOFTWARE_TYPE from){
 		// TODO : 对于QQ可以考虑在一条消息内发送多个图片
 		logging::info(u8"Image", u8"开始发送id为" + _id + "的图片");
 		if (!_is_valid) {
@@ -183,7 +183,7 @@ namespace ctbx::image {
 			return false;
 		}
 		std::string file_name;
-		if (from == types::GROUP_TYPE::QQ) {
+		if (from == types::SOFTWARE_TYPE::QQ) {
 			file_name = _md5 + _suffix;
 		}
 		else if (!_download(tgbot)) {
@@ -207,8 +207,8 @@ namespace ctbx::image {
 		return true;
 	}
 
-	bool Image::send(const ctbx::types::Group& group, const TgBot::Bot& tgbot, const std::string& caption="", const types::GROUP_TYPE from = types::GROUP_TYPE::TG){
-		if (group.type == ctbx::types::GROUP_TYPE::QQ)
+	bool Image::send(const ctbx::types::Group& group, const TgBot::Bot& tgbot, const std::string& caption="", const types::SOFTWARE_TYPE from = types::SOFTWARE_TYPE::TG){
+		if (group.type == ctbx::types::SOFTWARE_TYPE::QQ)
 			return send_to_qq(group.group_id, tgbot, caption, from);
 		else
 			return send_to_tg(group.group_id, tgbot, caption, from);

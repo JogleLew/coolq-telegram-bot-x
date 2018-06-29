@@ -16,7 +16,7 @@ namespace ctbx::message {
 
 	typedef ctbx::image::Image UImage;
 	typedef struct _REPLY {
-		ctbx::types::GROUP_TYPE type;
+		ctbx::types::SOFTWARE_TYPE type;
 		std::int64_t id;
 		std::string card;
 		// 和ctbx::types::User定义一致，为了以后方便扩展
@@ -48,9 +48,9 @@ namespace ctbx::message {
 	public:
 		explicit UnifiedMessage(const cq::GroupMessageEvent&);
 		explicit UnifiedMessage(const TgBot::Message::Ptr&, const TgBot::Bot&);
-		void send(const ctbx::types::Group&, const TgBot::Bot&, ctbx::types::GROUP_TYPE);
-		void send_to_qq(const int64_t, const TgBot::Bot&, ctbx::types::GROUP_TYPE);
-		void send_to_tg(const int64_t, const TgBot::Bot&, ctbx::types::GROUP_TYPE);
+		void send(const ctbx::types::Group&, const TgBot::Bot&, ctbx::types::SOFTWARE_TYPE);
+		void send_to_qq(const int64_t, const TgBot::Bot&, ctbx::types::SOFTWARE_TYPE);
+		void send_to_tg(const int64_t, const TgBot::Bot&, ctbx::types::SOFTWARE_TYPE);
 	private:
 		std::string _parse_card();
 		void _debug_remaining_msg(const cq::Message&);

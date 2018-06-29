@@ -13,7 +13,7 @@ namespace ctbx {
 
 	void tg_msg_log(const TgBot::Message::Ptr& msg, const Group& group) {
 		int64_t group_id = group.group_id;
-		std::string group_type = (group.type == GROUP_TYPE::QQ ? "QQ" : "TG");
+		std::string group_type = (group.type == SOFTWARE_TYPE::QQ ? "QQ" : "TG");
 		logging::info(u8"Forward", u8"从TG群" + std::to_string(msg->chat->id) + 
 			"收到消息 : " + msg->text + "，开始转发到" + group_type + "群" + std::to_string(group_id));
 		logging::debug(u8"MsgDebugInfo", u8"文本:" + std::to_string(msg->text != ""));
@@ -32,7 +32,7 @@ namespace ctbx {
 	void cq_msg_log(const cq::GroupMessageEvent& m, const Group& group) {
 		cq::Message msg = m.message;
 		int64_t group_id = group.group_id;
-		std::string group_type = (group.type == GROUP_TYPE::QQ ? "QQ" : "TG");
+		std::string group_type = (group.type == SOFTWARE_TYPE::QQ ? "QQ" : "TG");
 		logging::info(u8"MsgDebugInfo", u8"从QQ群" + std::to_string(m.group_id) +
 			"收到消息 : " + msg + "，开始转发到" + group_type + "群" + std::to_string(group_id));
 		logging::debug(u8"MsgDebugInfo", u8"raw:" + std::to_string(msg));
@@ -43,8 +43,8 @@ namespace ctbx {
 		}
 	}
 
-	Bot::Bot(const std::string& app_dir, int32_t timeout) 
-		: _config(app_dir), _tgbot(_config.get_bot_token()),  _polling(true) {
+	Bot::Bot() 
+		: _config(ctbx::config::Config::get_config()), _tgbot(_config.get_bot_token()),  _polling(true) {
 		
 	}
 
@@ -89,21 +89,18 @@ namespace ctbx {
 	}
 
 	void Bot::qq_receive_groupmessage(const cq::event::GroupMessageEvent & e){
-		for (auto &it : _config.get_forward_groups({ GROUP_TYPE::QQ, e.group_id })) {
+		for (auto &it : _config.get_forward_groups({ SOFTWARE_TYPE::QQ, e.group_id })) {
 			ctbx::message::UnifiedMessage msg(e);
 			cq_msg_log(e, it);
-			msg.send(it, _tgbot, ctbx::types::GROUP_TYPE::QQ);
+			msg.send(it, _tgbot, ctbx::types::SOFTWARE_TYPE::QQ);
 		}
 	}
 
-
-	bool Bot::config_valid()const { return _config.is_valid(); }
-
 	void Bot::_tg_receive_groupmessage(const TgBot::Message::Ptr& tgmsg) {
-		for (auto &it : _config.get_forward_groups({ GROUP_TYPE::TG, tgmsg->chat->id })) {
+		for (auto &it : _config.get_forward_groups({ SOFTWARE_TYPE::TG, tgmsg->chat->id })) {
 			ctbx::message::UnifiedMessage msg(tgmsg, _tgbot);
 			tg_msg_log(tgmsg, it);
-			msg.send(it, _tgbot, ctbx::types::GROUP_TYPE::TG);
+			msg.send(it, _tgbot, ctbx::types::SOFTWARE_TYPE::TG);
 		}
 	}
 

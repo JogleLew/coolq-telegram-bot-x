@@ -29,9 +29,9 @@ namespace ctbx::image {
 		Image(const std::string&, const std::string&);
 		Image(const TgBot::PhotoSize::Ptr&, const TgBot::Bot&);
 		Image(const TgBot::Sticker::Ptr&, const TgBot::Bot&);
-		bool send_to_tg(const int64_t, const TgBot::Bot&, const std::string&, const ctbx::types::GROUP_TYPE);
-		bool send_to_qq(const int64_t , const TgBot::Bot&, const std::string&, const ctbx::types::GROUP_TYPE);
-		bool send(const ctbx::types::Group&, const TgBot::Bot&, const std::string&, const ctbx::types::GROUP_TYPE);
+		bool send_to_tg(const int64_t, const TgBot::Bot&, const std::string&, const ctbx::types::SOFTWARE_TYPE);
+		bool send_to_qq(const int64_t , const TgBot::Bot&, const std::string&, const ctbx::types::SOFTWARE_TYPE);
+		bool send(const ctbx::types::Group&, const TgBot::Bot&, const std::string&, const ctbx::types::SOFTWARE_TYPE);
 		std::string get_md5();
 		std::string get_id();
 	private:

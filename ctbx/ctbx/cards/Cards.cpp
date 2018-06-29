@@ -38,7 +38,7 @@ namespace ctbx::cards {
 				if (!err) {
 					_mtx.lock();
 					for (auto &it : _groups)
-						if (it.type == types::GROUP_TYPE::QQ)
+						if (it.type == types::SOFTWARE_TYPE::QQ)
 							update_cards(it.group_id);
 					_mtx.unlock();
 					_update_timer->expires_at(_update_timer->expires_at() + boost::posix_time::seconds(seconds));
@@ -103,7 +103,7 @@ namespace ctbx::cards {
 
 	void Cards::update_groups(int64_t group_id) {
 		_mtx.lock();
-		_groups.push_back(types::Group({ types::GROUP_TYPE::QQ, group_id }));
+		_groups.push_back(types::Group({ types::SOFTWARE_TYPE::QQ, group_id }));
 		_mtx.unlock();
 	}
 
