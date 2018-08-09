@@ -1,13 +1,24 @@
+﻿/// @file    UnifedMessage.cpp
+/// @brief   CTBX Unified Message
+/// @author  wtdcode
+/// @date    2018-03-21
+/// @note    Unified message management: parse and send
+///
+
 #include "./UnifiedMessage.h"
 
-namespace types = ctbx::types;
+namespace types   = ctbx::types;
 namespace logging = ctbx::logging;
-namespace type = ctbx::types;
-namespace image = ctbx::image;
+namespace type    = ctbx::types;
+namespace image   = ctbx::image;
 
 using namespace ctbx::cards;
 
 namespace ctbx::message {
+	/// constructor (from CoolQ message)
+	/// @note  Constructor of unified message
+	/// @param cqgmsg CoolQ message
+	/// 
 	UnifiedMessage::UnifiedMessage(const cq::GroupMessageEvent& cqgmsg)
 		: _unified_card(""), _image_count(0), _image_only(false), _from({ types::SOFTWARE_TYPE::QQ, cqgmsg.group_id, Cards::get_card(cqgmsg.group_id, cqgmsg.user_id) }) {
 		int64_t from_group_id = cqgmsg.group_id;
@@ -65,6 +76,12 @@ namespace ctbx::message {
 		_debug_remaining_msg(msg_list);
 		_debug_all_segs();
 	}
+
+	/// constructor (from Telegram message)
+	/// @note  Constructor of unified message
+	/// @param tgmsg Telegram message
+	/// @param tgbot Telegram bot
+	/// 
 	UnifiedMessage::UnifiedMessage(const TgBot::Message::Ptr& tgmsg, const TgBot::Bot& tgbot)
 		: _unified_card(""), _image_count(0), _image_only(false), _from({ types::SOFTWARE_TYPE::TG,tgmsg->from->id,tgmsg->from->firstName }) {
 		if (tgmsg->forwardFrom.use_count()) {
@@ -87,12 +104,28 @@ namespace ctbx::message {
 			_segs.emplace_back(new UPlain(tgmsg->text));
 		}
 	}
+
+	/// send
+	/// @note   Send unified message to certain group
+	/// @param  group Telegram group
+	/// @param  bot   Telegram bot
+	/// @param  from  Where the message is from
+	/// @return void 
+	/// 
 	void UnifiedMessage::send(const ctbx::types::Group& group, const TgBot::Bot& bot, ctbx::types::SOFTWARE_TYPE from) {
 		if (group.type == types::SOFTWARE_TYPE::QQ)
 			send_to_qq(group.group_id, bot, from);
 		else
 			send_to_tg(group.group_id, bot, from);
 	}
+
+	/// send_to_qq
+	/// @note   Send unified message to certain QQ group
+	/// @param  group_id QQ group id
+	/// @param  bot      Telegram bot
+	/// @param  from     Where the message is from
+	/// @return void 
+	/// 
 	void UnifiedMessage::send_to_qq(const int64_t group_id, const TgBot::Bot& bot, ctbx::types::SOFTWARE_TYPE from) {
 		if (_unified_card.empty())
 			_unified_card = _parse_card();
@@ -120,6 +153,14 @@ namespace ctbx::message {
 			}
 		}
 	}
+
+	/// send_to_tg
+	/// @note   Send unified message to certain Telegram group
+	/// @param  group_id Telegram group id
+	/// @param  bot      Telegram bot
+	/// @param  from     Where the message is from
+	/// @return void 
+	/// 
 	void UnifiedMessage::send_to_tg(const int64_t group_id, const TgBot::Bot & bot, ctbx::types::SOFTWARE_TYPE from) {
 		if (_unified_card.empty())
 			_unified_card = _parse_card();
@@ -147,6 +188,11 @@ namespace ctbx::message {
 			}
 		}
 	}
+
+	/// _parse_card
+	/// @note   Parse member card accroding to unified message
+	/// @return Member card name
+	/// 
 	std::string UnifiedMessage::_parse_card() {
 		std::string text = _from.card;
 		for (auto it = _segs.begin(); it != _segs.end(); it++) {
@@ -166,6 +212,12 @@ namespace ctbx::message {
 		text += ": ";
 		return text;
 	}
+
+	/// _debug_remaining_msg
+	/// @note   Logging status of remaining message
+	/// @param  msg  Remaining message
+	/// @return void
+	/// 
 	void UnifiedMessage::_debug_remaining_msg(const cq::Message& msg) {
 		logging::debug(u8"UnifiedMessage", "检查CQ剩余消息");
 		if (msg.empty())
@@ -176,6 +228,11 @@ namespace ctbx::message {
 			logging::debug(u8"UnifiedMessage", "type:" + it.type + " data:" + it.data.begin()->second);
 		}
 	}
+
+	/// _debug_all_segs
+	/// @note   Logging info of unified message
+	/// @return void
+	/// 
 	void UnifiedMessage::_debug_all_segs() {
 		logging::debug(u8"UnifiedMessage", "打印信息片段");
 		for (auto& it : _segs) {

@@ -1,16 +1,29 @@
+﻿/// @file    Bot.cpp
+/// @brief   CTBX Telgram Bot Part
+/// @author  wtdcode
+/// @date    2018-03-21
+/// @note    Telegram Bot of CoolQ Telegram Bot X.
+///
+
 #include "./Bot.h"
 #include "Bot.h"
 
-namespace logging = ctbx::logging; // 绕开CQ的原生log线程不安全的坑
+namespace logging   = ctbx::logging; ///< Use thread-safe logging
 namespace exception = cq::exception;
-namespace api = cq::api;
-namespace dir = cq::dir;
+namespace api       = cq::api;
+namespace dir       = cq::dir;
 
 using namespace ctbx::cards;
 
 namespace ctbx {
 	typedef std::function<void(const boost::system::error_code&)> timer_callback;
 
+	/// tg_msg_log
+	/// @note   Log Telegram message
+	/// @param  msg   Received Telegram message
+	/// @param  group Group info
+	/// @return void
+	/// 
 	void tg_msg_log(const TgBot::Message::Ptr& msg, const Group& group) {
 		int64_t group_id = group.group_id;
 		std::string group_type = (group.type == SOFTWARE_TYPE::QQ ? "QQ" : "TG");
@@ -29,6 +42,13 @@ namespace ctbx {
 		if (msg->audio.use_count())
 			logging::debug(u8"MsgDebugInfo", u8"Type:" + msg->audio->mimeType + " performer:" + msg->audio->performer + " field:" + msg->audio->fileId);
 	}
+
+	/// cq_msg_log
+	/// @note   Log CoolQ message
+	/// @param  m     Received CoolQ message
+	/// @param  group Group info
+	/// @return void
+	/// 
 	void cq_msg_log(const cq::GroupMessageEvent& m, const Group& group) {
 		cq::Message msg = m.message;
 		int64_t group_id = group.group_id;
@@ -43,11 +63,17 @@ namespace ctbx {
 		}
 	}
 
+	/// constructor
+	/// @note Constructor of Telegram bot
+	/// 
 	Bot::Bot() 
 		: _config(ctbx::config::Config::get_config()), _tgbot(_config.get_bot_token()),  _polling(true) {
 		
 	}
 
+	/// destructor
+	/// @note Destructor of Telegram bot
+	/// 
 	Bot::~Bot() {
 		logging::info(u8"Bot", u8"Bot即将退出");
 		_polling = false;
@@ -56,6 +82,10 @@ namespace ctbx {
 		Cards::stop_updating();
 	}
 
+	/// bot_on_enable
+	/// @note   Initialize Telegram bot, execute when bot is enabled
+	/// @return void
+	/// 
 	void Bot::bot_on_enable() {
 		logging::info(u8"Bot", u8"Bot开始初始化");
 		logging::debug(u8"TGBot", u8"开始初始化TGBot，根据网络情况需要的时间有较大区别");
@@ -88,6 +118,11 @@ namespace ctbx {
 		logging::info(u8"Bot", u8"初始化完毕");
 	}
 
+	/// qq_receive_groupmessage
+	/// @note   Forward message when CoolQ message received 
+	/// @param  e Group message from CoolQ
+	/// @return void
+	/// 
 	void Bot::qq_receive_groupmessage(const cq::event::GroupMessageEvent & e){
 		for (auto &it : _config.get_forward_groups({ SOFTWARE_TYPE::QQ, e.group_id })) {
 			ctbx::message::UnifiedMessage msg(e);
@@ -96,6 +131,11 @@ namespace ctbx {
 		}
 	}
 
+	/// _tg_receive_groupmessage
+	/// @note   Forward message when Telegram message received 
+	/// @param  tgmsg Group message from Telegram
+	/// @return void
+	/// 
 	void Bot::_tg_receive_groupmessage(const TgBot::Message::Ptr& tgmsg) {
 		for (auto &it : _config.get_forward_groups({ SOFTWARE_TYPE::TG, tgmsg->chat->id })) {
 			ctbx::message::UnifiedMessage msg(tgmsg, _tgbot);
@@ -104,10 +144,18 @@ namespace ctbx {
 		}
 	}
 
+	/// _tgbot_set_events
+	/// @note   Set up callback on any message for Telegram bot
+	/// @return void
+	/// 
 	void Bot::_tgbot_set_events(){
 		_tgbot.getEvents().onAnyMessage([this](const auto& msg) {_tg_receive_groupmessage(msg); });
 	}
 
+	/// _tgbot_start_polling
+	/// @note   Start polling process of Telegram bot
+	/// @return void
+	/// 
 	void Bot::_tgbot_start_polling() {
 		_tgbot_thread =  std::move(std::thread([this]() {
 			TgBot::TgLongPoll longpoll(_tgbot, 100, 10);

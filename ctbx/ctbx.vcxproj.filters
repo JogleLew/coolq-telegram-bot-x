@@ -50,6 +50,9 @@
     <Filter Include="ctbx\logging">
       <UniqueIdentifier>{3da4074e-2d1b-4541-9cb9-5421b7dbec5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ctbx\localization">
+      <UniqueIdentifier>{eff70dfa-916a-4179-8cb5-4092c673fb97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cqsdk\api.cpp">
@@ -165,6 +168,9 @@
     </ClCompile>
     <ClCompile Include="ctbx\image\imageio\wicdec.c">
       <Filter>ctbx\image\imageio</Filter>
+    </ClCompile>
+    <ClCompile Include="ctbx\localization\Localization.cpp">
+      <Filter>ctbx\localization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -506,6 +512,9 @@
     </ClInclude>
     <ClInclude Include="ctbx\image\imageio\wicdec.h">
       <Filter>ctbx\image\imageio</Filter>
+    </ClInclude>
+    <ClInclude Include="ctbx\localization\Localization.h">
+      <Filter>ctbx\localization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

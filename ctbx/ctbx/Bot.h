@@ -2,6 +2,7 @@
 
 #include "ctbx/stdafx.h"
 #include "ctbx/logging/Logging.h"
+#include "ctbx/localization/Localization.h"
 #include "ctbx/cards/Cards.h"
 #include "ctbx/config/Config.h"
 #include "ctbx/types/Types.h"

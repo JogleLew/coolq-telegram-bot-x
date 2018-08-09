@@ -1,7 +1,14 @@
+﻿/// @file    Cards.cpp
+/// @brief   CTBX Group Member Cards
+/// @author  wtdcode
+/// @date    2018-03-21
+/// @note    Group member card management
+///
+
 #include "./Cards.h"
 
 namespace logging = ctbx::logging;
-namespace types = ctbx::types;
+namespace types   = ctbx::types;
 
 namespace ctbx::cards {
 	
@@ -13,15 +20,28 @@ namespace ctbx::cards {
 	std::unordered_map<int64_t, std::unordered_map<int64_t, std::string>> Cards::_cards;
 	std::vector<ctbx::types::Group> Cards::_groups;
 
+	/// constructor
+	/// @note Constructor of Cards class
+	/// 
 	Cards::Cards() {
 
 	}
 
+	/// get_cards
+	/// @note   Get static Cards object
+	/// @return Cards object
+	/// 
 	Cards& Cards::get_cards(){
 		static Cards cards;
 		return cards;
 	}
 
+	/// start_updating
+	/// @note   Start a thread to update member cards
+	/// @param  groups  Target group 
+	/// @param  seconds Updating interval (in second)
+	/// @return void
+	/// 
 	void Cards::start_updating(const std::vector<ctbx::types::Group>& groups, long seconds){
 		if (_update_timer.use_count()) {
 			logging::warning(u8"Cards", u8"群名片更新Timer已经启动");
@@ -52,6 +72,10 @@ namespace ctbx::cards {
 		}));
 	}
 
+	/// stop_updating
+	/// @note   Stop the thread of updating member cards
+	/// @return void
+	/// 
 	void Cards::stop_updating() { 
 		if(_update_timer.use_count())
 			_update_timer.reset();
@@ -59,12 +83,25 @@ namespace ctbx::cards {
 			_update_thread.join();
 	}
 
+	/// add_cards
+	/// @note   Add a member card item
+	/// @param  group_id Group id 
+	/// @param  user_id  Group member id
+	/// @param  card     Group card name
+	/// @return void
+	/// 
 	void Cards::add_cards(int64_t group_id, int64_t user_id, const std::string& card) {
 		_mtx.lock();
 		_cards[group_id][user_id] = card;
 		_mtx.unlock();
 	}
 
+	/// get_card
+	/// @note   Get member card by group and user id
+	/// @param  group_id Group id 
+	/// @param  user_id  Group member id
+	/// @return Group card name
+	///
 	std::string Cards::get_card(int64_t group_id, int64_t user_id){
 		_mtx.lock();
 		if (!_cards.count(group_id) || !_cards[group_id].count(user_id)) {
@@ -76,6 +113,11 @@ namespace ctbx::cards {
 		return card;
 	}
 
+	/// update_cards
+	/// @note   Function of batch updating member card
+	/// @param  group_id Group id 
+	/// @return void
+	///
 	void Cards::update_cards(int64_t group_id){
 		logging::info(u8"Card", u8"开始更新群" + std::to_string(group_id) + "名片");
 		std::vector<cq::GroupMember> memlist;
@@ -95,18 +137,34 @@ namespace ctbx::cards {
 		logging::info(u8"Card", u8"群" + std::to_string(group_id) + "名片已经更新");
 	}
 
+	/// update_groups
+	/// @note   Add a list of groups to target updating list
+	/// @param  groups list of Group id 
+	/// @return void
+	///
 	void Cards::update_groups(const std::vector<types::Group>& groups) { 
 		_mtx.lock();
 		_groups.assign(groups.begin(), groups.end()); 
 		_mtx.unlock();
 	}
 
+	/// update_groups
+	/// @note   Add a group to target updating list
+	/// @param  group_id Group id 
+	/// @return void
+	///
 	void Cards::update_groups(int64_t group_id) {
 		_mtx.lock();
 		_groups.push_back(types::Group({ types::SOFTWARE_TYPE::QQ, group_id }));
 		_mtx.unlock();
 	}
 
+	/// _fetch_card
+	/// @note   fetch one group member's member card
+	/// @param  group_id Group id 
+	/// @param  user_id Group member id 
+	/// @return void
+	///
 	std::string Cards::_fetch_card(int64_t group_id, int64_t user_id){
 		try {
 			logging::debug(u8"Card", u8"单独获取群" + std::to_string(group_id) + u8"成员" + std::to_string(user_id) + u8"的群名片");

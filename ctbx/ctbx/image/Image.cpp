@@ -1,3 +1,10 @@
+﻿/// @file    Image.cpp
+/// @brief   CTBX Image Utility
+/// @author  wtdcode
+/// @date    2018-03-21
+/// @note    Image parse and convert
+///
+
 #include "./Image.h"
 
 namespace logging = ctbx::logging;
@@ -18,9 +25,16 @@ namespace ctbx::image {
 	std::map < std::string, std::string > Image::_cq_cache = {};
 	const std::map <std::string, std::string> Image::_mimetype = { {".jpg", "image/jpeg"}, {".png", "image/png"}, {".gif", "image/gif"} };
 
+	/// constructor
+	/// @note Constructor of Image class
+	/// 
 	Image::Image()
 		: _id(""), _md5(""), _is_valid(false), _file_path(""), _url(""), _suffix(""), _width(-1), _height(-1), _file_size(-1), _add_time(-1) {}
 
+	/// constructor (by image name)
+	/// @note  Constructor of Cards class
+	/// @param img_name Image name
+	/// 
 	Image::Image(const std::string& img_name) {
 		std::size_t pos = img_name.find_last_of(".");
 		std::string md5 = img_name.substr(0, pos);
@@ -46,6 +60,12 @@ namespace ctbx::image {
 			_parse_cqimg(img);
 		}
 	}
+
+	/// constructor (by md5 and id)
+	/// @note  Constructor of Cards class
+	/// @param md5 Image MD5
+	/// @param id  Image id
+	/// 
 	Image::Image(const std::string& md5, const std::string& id) : Image() {
 		_md5 = md5;
 		_id = id;
@@ -54,6 +74,11 @@ namespace ctbx::image {
 			_get_root();
 	}
 
+	/// constructor (from Telegram photo)
+	/// @note  Constructor of Cards class
+	/// @param p     Telegram photo pointer
+	/// @param tgbot Telegram bot
+	/// 
 	Image::Image(const TgBot::PhotoSize::Ptr& p, const TgBot::Bot& tgbot) : Image() {
 		_id = p->fileId;
 		_file_size = p->fileSize;
@@ -64,6 +89,11 @@ namespace ctbx::image {
 			_get_root();
 	}
 
+	/// constructor (from Telegram sticker)
+	/// @note  Constructor of Cards class
+	/// @param p     Telegram sticker pointer
+	/// @param tgbot Telegram bot
+	/// 
 	Image::Image(const TgBot::Sticker::Ptr& p, const TgBot::Bot& tgbot) {
 		_id = p->fileId;
 		_file_size = p->fileSize;
@@ -74,6 +104,11 @@ namespace ctbx::image {
 			_get_root();
 	}
 
+	/// _parse_cqimg
+	/// @note   Parse CQImg file to image
+	/// @param  in   CQImg file stream    
+	/// @return void
+	/// 
 	void Image::_parse_cqimg(std::istream& in) {
 		std::string buffer;
 		for (int i = 0; i < 7; i++) {
@@ -112,6 +147,14 @@ namespace ctbx::image {
 		return;
 	}
 
+	/// send_to_tg
+	/// @note   Send image to Telegram 
+	/// @param  chat_id Telegram group id
+	/// @param  tgbot   Telegram bot
+	/// @param  caption Picture caption
+	/// @param  from    Where this picture from
+	/// @return Boolean value of sending status
+	/// 
 	bool Image::send_to_tg(const int64_t chat_id, const TgBot::Bot& tgbot, const std::string& caption, const types::SOFTWARE_TYPE from){
 		logging::info(u8"Image", u8"开始发送md5为" + _md5 + "的图片");
 		if (!_is_valid) {
@@ -175,6 +218,14 @@ namespace ctbx::image {
 		}
 	}
 
+	/// send_to_qq
+	/// @note   Send image to QQ 
+	/// @param  group_id QQ group id
+	/// @param  tgbot    Telegram bot
+	/// @param  caption  Picture caption
+	/// @param  from     Where this picture from
+	/// @return Boolean  value of sending status
+	/// 
 	bool Image::send_to_qq(const int64_t group_id, const TgBot::Bot& tgbot, const std::string& caption, const types::SOFTWARE_TYPE from){
 		// TODO : 对于QQ可以考虑在一条消息内发送多个图片
 		logging::info(u8"Image", u8"开始发送id为" + _id + "的图片");
@@ -207,6 +258,14 @@ namespace ctbx::image {
 		return true;
 	}
 
+	/// send
+	/// @note   Send image to QQ 
+	/// @param  group   Group info
+	/// @param  tgbot   Telegram bot
+	/// @param  caption Picture caption
+	/// @param  from    Where this picture from
+	/// @return Boolean value of sending status
+	/// 
 	bool Image::send(const ctbx::types::Group& group, const TgBot::Bot& tgbot, const std::string& caption="", const types::SOFTWARE_TYPE from = types::SOFTWARE_TYPE::TG){
 		if (group.type == ctbx::types::SOFTWARE_TYPE::QQ)
 			return send_to_qq(group.group_id, tgbot, caption, from);
@@ -214,9 +273,19 @@ namespace ctbx::image {
 			return send_to_tg(group.group_id, tgbot, caption, from);
 	}
 
+	/// get_md5
+	/// @note   get md5 of image
+	/// @return md5 value
 	std::string Image::get_md5() { return _md5; }
+	
+	/// get_id
+	/// @note   get image id
+	/// @return image id
 	std::string Image::get_id() { return _id; }
 
+	/// _get_root
+	/// @note   Log image absolute path
+	/// @return void
 	void Image::_get_root() {
 		logging::debug(u8"Image", u8"开始获取图片目录");
 		_image_root_path = cq::utils::ansi(cq::dir::root());
@@ -224,6 +293,10 @@ namespace ctbx::image {
 		logging::debug(u8"Image", u8"图片目录为:" + _image_root_path);
 	}
 
+	/// _download
+	/// @note   Download image
+	/// @param  tgbot Telegram bot
+	/// @return Boolean status of download status
 	bool Image::_download(const TgBot::Bot& tgbot) {
 		if (!_is_valid)
 			return false;
@@ -271,6 +344,10 @@ namespace ctbx::image {
 		return true;
 	}
 
+	/// _convert_webp
+	/// @note   Convert image to webp format
+	/// @param  img_content Content of image
+	/// @return Boolean status of converting status
 	bool Image::_convert_webp(const std::string& img_content) {
 		std::string tmp_dir = cq::utils::ansi(cq::dir::app_tmp());
 		_file_path = tmp_dir + _id + _suffix;
@@ -306,6 +383,10 @@ namespace ctbx::image {
 		return true;
 	}
 
+	/// _get_suffix
+	/// @note   Get suffix of image file (file format)
+	/// @param  tgbot Telegram bot
+	/// @return Boolean status of retriving status
 	bool Image::_get_suffix(const TgBot::Bot& tgbot) {
 		try {
 			std::shared_ptr<TgBot::File> img_file = tgbot.getApi().getFile(_id);
