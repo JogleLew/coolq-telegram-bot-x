@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -42,7 +42,7 @@
     <ClCompile Include="ctbx\image\imageio\tiffdec.c" />
     <ClCompile Include="ctbx\image\imageio\webpdec.c" />
     <ClCompile Include="ctbx\image\imageio\wicdec.c" />
-    <ClCompile Include="ctbx\logging\Logging.cpp" />
+    <ClCompile Include="ctbx\localization\Localization.cpp" />
     <ClCompile Include="ctbx\main.cpp" />
     <ClCompile Include="ctbx\unifiedmessage\UnifiedMessage.cpp" />
     <ClCompile Include="tgbot\Api.cpp" />
@@ -94,6 +94,8 @@
     <ClInclude Include="ctbx\image\imageio\tiffdec.h" />
     <ClInclude Include="ctbx\image\imageio\webpdec.h" />
     <ClInclude Include="ctbx\image\imageio\wicdec.h" />
+    <ClInclude Include="ctbx\localization\Localization.h" />
+    <ClInclude Include="ctbx\logging\Locale.h" />
     <ClInclude Include="ctbx\logging\Logging.h" />
     <ClInclude Include="ctbx\stdafx.h" />
     <ClInclude Include="ctbx\types\Types.h" />
@@ -259,6 +261,7 @@
       <EnableModules>false</EnableModules>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

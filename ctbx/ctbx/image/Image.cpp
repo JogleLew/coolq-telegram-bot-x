@@ -1,6 +1,16 @@
+﻿/// @file    Image.cpp
+/// @brief   CTBX Image Utility
+/// @author  wtdcode
+/// @date    2018-03-21
+/// @note    Image parse and convert
+///
+
 #include "./Image.h"
 
 namespace logging = ctbx::logging;
+
+using namespace logging::Image;
+using namespace cq::utils;
 
 namespace ctbx::image {
 
@@ -11,6 +21,9 @@ namespace ctbx::image {
 
 		啊，好菜的C++
 		2018/6/27
+
+		我写的是什么.jpg
+		2018/9/14
 	*/
 
 	std::string Image::_image_root_path = "";
@@ -18,16 +31,23 @@ namespace ctbx::image {
 	std::map < std::string, std::string > Image::_cq_cache = {};
 	const std::map <std::string, std::string> Image::_mimetype = { {".jpg", "image/jpeg"}, {".png", "image/png"}, {".gif", "image/gif"} };
 
+	/// constructor
+	/// @note Constructor of Image class
+	/// 
 	Image::Image()
 		: _id(""), _md5(""), _is_valid(false), _file_path(""), _url(""), _suffix(""), _width(-1), _height(-1), _file_size(-1), _add_time(-1) {}
 
+	/// constructor (by image name)
+	/// @note  Constructor of Cards class
+	/// @param img_name Image name
+	/// 
 	Image::Image(const std::string& img_name) {
 		std::size_t pos = img_name.find_last_of(".");
 		std::string md5 = img_name.substr(0, pos);
 		std::string suffix = img_name.substr(pos);
-		logging::debug(u8"Image", u8"开始获取md5为" + md5 + u8"的图片");
+		logging::debug(DEBUG_IMAGE_TAG, fmt::format(DEBUG_IMAGE_START_FETCHING_BY_MD5, md5));
 		if (_cq_cache.count(md5)) {
-			logging::debug(u8"Image", u8"缓存中存在该图片！");
+			logging::debug(DEBUG_IMAGE_TAG, DEBUG_IMAGE_CACHED);
 			_md5 = md5;
 			_id = _cq_cache[md5];
 			_is_valid = true;
@@ -39,13 +59,19 @@ namespace ctbx::image {
 		if (img.is_open()) {
 			_suffix = suffix;
 			if (suffix == ".null") {
-				logging::debug(u8"Image", u8"收到null后缀图片，强行修改为jpg");
+				logging::debug(DEBUG_IMAGE_TAG, DEBUG_IMAGE_CQ_FUCKING_BUG);
 				_suffix = ".jpg";
 			}
-			logging::debug(u8"Image", u8"后缀：" + _suffix + "有效，开始读取");
+			logging::debug(DEBUG_IMAGE_TAG, fmt::format(DEBUG_IMAGE_SUFFIX, _suffix));
 			_parse_cqimg(img);
 		}
 	}
+
+	/// constructor (by md5 and id)
+	/// @note  Constructor of Cards class
+	/// @param md5 Image MD5
+	/// @param id  Image id
+	/// 
 	Image::Image(const std::string& md5, const std::string& id) : Image() {
 		_md5 = md5;
 		_id = id;
@@ -54,6 +80,11 @@ namespace ctbx::image {
 			_get_root();
 	}
 
+	/// constructor (from Telegram photo)
+	/// @note  Constructor of Cards class
+	/// @param p     Telegram photo pointer
+	/// @param tgbot Telegram bot
+	/// 
 	Image::Image(const TgBot::PhotoSize::Ptr& p, const TgBot::Bot& tgbot) : Image() {
 		_id = p->fileId;
 		_file_size = p->fileSize;
@@ -64,6 +95,11 @@ namespace ctbx::image {
 			_get_root();
 	}
 
+	/// constructor (from Telegram sticker)
+	/// @note  Constructor of Cards class
+	/// @param p     Telegram sticker pointer
+	/// @param tgbot Telegram bot
+	/// 
 	Image::Image(const TgBot::Sticker::Ptr& p, const TgBot::Bot& tgbot) {
 		_id = p->fileId;
 		_file_size = p->fileSize;
@@ -74,6 +110,11 @@ namespace ctbx::image {
 			_get_root();
 	}
 
+	/// _parse_cqimg
+	/// @note   Parse CQImg file to image
+	/// @param  in   CQImg file stream    
+	/// @return void
+	/// 
 	void Image::_parse_cqimg(std::istream& in) {
 		std::string buffer;
 		for (int i = 0; i < 7; i++) {
@@ -81,14 +122,14 @@ namespace ctbx::image {
 			if (i == 0 && buffer == "[image]")
 				continue;
 			else if (i == 0 && buffer != "[image]") {
-				logging::warning(u8"Image", u8"Magic有误，无法读取");
+				logging::warning(WARNING_CQIMG_PARSING_TAG, WARNING_CQIMG_MAGIC_ERROR);
 				_is_valid = false;
 				return;
 			}
 			else {
 				std::size_t pos = buffer.find_first_of("=");
 				if (pos == std::string::npos) {
-					logging::warning(u8"Image", u8"属性无法读取");
+					logging::warning(WARNING_CQIMG_PARSING_TAG, WARNING_CQIMG_PROPERTY_ERROR);
 					_is_valid = false;
 					return;
 				}
@@ -112,10 +153,18 @@ namespace ctbx::image {
 		return;
 	}
 
+	/// send_to_tg
+	/// @note   Send image to Telegram 
+	/// @param  chat_id Telegram group id
+	/// @param  tgbot   Telegram bot
+	/// @param  caption Picture caption
+	/// @param  from    Where this picture from
+	/// @return Boolean value of sending status
+	/// 
 	bool Image::send_to_tg(const int64_t chat_id, const TgBot::Bot& tgbot, const std::string& caption, const types::SOFTWARE_TYPE from){
-		logging::info(u8"Image", u8"开始发送md5为" + _md5 + "的图片");
+		logging::info(INFO_IMAGE_TAG, fmt::format(INFO_IMAGE_SEND_TO_TG, _md5));
 		if (!_is_valid) {
-			logging::warning(u8"Image", u8"无效的图片发送！md5=" + _md5 + " _id:" + _id);
+			logging::warning(WARNING_IMAGE_SENDING_TAG, fmt::format(WARNING_IMAGE_NOT_VALID, _md5, _id));
 			return false;
 		}
 		auto send_impl = [&](const std::string& id) {
@@ -123,7 +172,15 @@ namespace ctbx::image {
 				tgbot.getApi().sendPhoto(chat_id, id, caption);
 			}
 			catch (const TgBot::TgException& e) {
-				tgbot.getApi().sendDocument(chat_id, id, caption);
+				try {
+					tgbot.getApi().sendDocument(chat_id, id, caption);
+				}
+				catch (const std::exception& e) {
+					logging::debug(DEBUG_IMAGE_TAG, fmt::format(DEBUG_IMAGE_SENDING_FAILED_ID, id, string_decode(std::string(e.what()), Encoding::ANSI)));
+				}
+			}
+			catch (const std::exception& e) {
+				logging::debug(DEBUG_IMAGE_TAG, fmt::format(DEBUG_IMAGE_SENDING_FAILED_ID, id, string_decode(std::string(e.what()), Encoding::ANSI)));
 			}
 		};
 		if (_cq_cache.count(_md5)) {
@@ -131,8 +188,8 @@ namespace ctbx::image {
 				send_impl(_cq_cache.at(_md5));
 				return true;
 			}
-			catch (const TgBot::TgException& e) {
-				logging::error(u8"Image", u8"发送md5为" + _md5 + "的已缓存图片失败，原因：" + std::string(e.what()));
+			catch (const std::exception& e) {
+				logging::warning(WARNING_IMAGE_SENDING_TAG, fmt::format(WARNING_IMAGE_CACHED_SENDING_FALIED, _md5, string_decode(std::string(e.what()), Encoding::ANSI)));
 				_cq_cache.erase(_cq_cache.find(_md5));
 				return false;
 			}
@@ -142,8 +199,8 @@ namespace ctbx::image {
 				send_impl(_id);
 				return true;
 			}
-			catch (const TgBot::TgException& e) {
-				logging::error(u8"Image", u8"发送id为" + _id + "的图片失败，原因：" + std::string(e.what()));
+			catch (const std::exception& e) {
+				logging::debug(DEBUG_IMAGE_TAG, fmt::format(DEBUG_IMAGE_SENDING_FAILED_ID, _id, string_decode(std::string(e.what()), Encoding::ANSI)));
 				return false;
 			}
 		}
@@ -165,21 +222,33 @@ namespace ctbx::image {
 				return true;
 			}
 			catch (const TgBot::TgException& e) {
-				logging::error(u8"Image", u8"发送md5为" + _md5 + "的图片失败，原因：" + std::string(e.what()));
+				logging::debug(DEBUG_IMAGE_TAG,fmt::format(DEBUG_IMAGE_SENDING_FAILED_MD5, _md5, string_decode(std::string(e.what()), Encoding::ANSI)));
 				return false;
 			}
 			catch (const std::out_of_range& e) {
-				logging::error(u8"Image", u8"返回的图片id获取失败！原因:" + std::string(e.what()));
+				logging::warning(WARNING_IMAGE_SENDING_TAG, fmt::format(WARNING_IMAGE_FAIL_TO_GET_ID, string_decode(std::string(e.what()), Encoding::ANSI)));
+				return false;
+			}
+			catch (const std::exception& e) {
+				logging::debug(DEBUG_IMAGE_TAG, fmt::format(DEBUG_IMAGE_SENDING_FAILED_MD5, _md5, string_decode(std::string(e.what()), Encoding::ANSI)));
 				return false;
 			}
 		}
 	}
 
+	/// send_to_qq
+	/// @note   Send image to QQ 
+	/// @param  group_id QQ group id
+	/// @param  tgbot    Telegram bot
+	/// @param  caption  Picture caption
+	/// @param  from     Where this picture from
+	/// @return Boolean  value of sending status
+	/// 
 	bool Image::send_to_qq(const int64_t group_id, const TgBot::Bot& tgbot, const std::string& caption, const types::SOFTWARE_TYPE from){
 		// TODO : 对于QQ可以考虑在一条消息内发送多个图片
-		logging::info(u8"Image", u8"开始发送id为" + _id + "的图片");
+		logging::info(INFO_IMAGE_TAG, fmt::format(INFO_IMAGE_SEND_TO_CQ, _id));
 		if (!_is_valid) {
-			logging::warning(u8"Image", u8"无效的图片发送！md5=" + _md5 + " _id:" + _id);
+			logging::warning(WARNING_IMAGE_SENDING_TAG, fmt::format(WARNING_IMAGE_NOT_VALID, _md5, _id));
 			return false;
 		}
 		std::string file_name;
@@ -201,12 +270,20 @@ namespace ctbx::image {
 			cq::api::send_group_msg(group_id, img_msg);
 		}
 		catch (const cq::exception::ApiError& e) {
-			logging::error(u8"Image", u8"发送id为" + _id + "路径为" + _file_path + "的图片失败，原因" + std::string(e.what()));
+			logging::debug(DEBUG_IMAGE_TAG,fmt::format(DEBUG_IMAGE_SENDING_FAILED_ID_PATH, _id, _file_path, string_decode(std::string(e.what()), Encoding::ANSI)));
 			return false;
 		}
 		return true;
 	}
 
+	/// send
+	/// @note   Send image to QQ 
+	/// @param  group   Group info
+	/// @param  tgbot   Telegram bot
+	/// @param  caption Picture caption
+	/// @param  from    Where this picture from
+	/// @return Boolean value of sending status
+	/// 
 	bool Image::send(const ctbx::types::Group& group, const TgBot::Bot& tgbot, const std::string& caption="", const types::SOFTWARE_TYPE from = types::SOFTWARE_TYPE::TG){
 		if (group.type == ctbx::types::SOFTWARE_TYPE::QQ)
 			return send_to_qq(group.group_id, tgbot, caption, from);
@@ -214,16 +291,30 @@ namespace ctbx::image {
 			return send_to_tg(group.group_id, tgbot, caption, from);
 	}
 
+	/// get_md5
+	/// @note   get md5 of image
+	/// @return md5 value
 	std::string Image::get_md5() { return _md5; }
+	
+	/// get_id
+	/// @note   get image id
+	/// @return image id
 	std::string Image::get_id() { return _id; }
 
+	/// _get_root
+	/// @note   Log image absolute path
+	/// @return void
 	void Image::_get_root() {
-		logging::debug(u8"Image", u8"开始获取图片目录");
+		logging::debug(DEBUG_IMAGE_TAG, DEBUG_IMAGE_GET_ROOT);
 		_image_root_path = cq::utils::ansi(cq::dir::root());
 		_image_root_path += "data\\image\\";
-		logging::debug(u8"Image", u8"图片目录为:" + _image_root_path);
+		logging::debug(DEBUG_IMAGE_TAG,fmt::format(DEBUG_IMAGE_ROOT, _image_root_path));
 	}
 
+	/// _download
+	/// @note   Download image
+	/// @param  tgbot Telegram bot
+	/// @return Boolean status of download status
 	bool Image::_download(const TgBot::Bot& tgbot) {
 		if (!_is_valid)
 			return false;
@@ -231,37 +322,32 @@ namespace ctbx::image {
 			return false;
 		std::string img_content;
 		if (_md5.empty()) {
-			logging::debug(u8"Image", u8"开始下载id为" + _id + "的TG图片");
+			logging::debug(DEBUG_IMAGE_TAG, fmt::format(DEBUG_DOWNLOAD_TG_IMAGE, _id));
 			try {
 				std::shared_ptr<TgBot::File> img_file = tgbot.getApi().getFile(_id);
 				img_content = tgbot.getApi().downloadFile(img_file->filePath);
 				_file_path = _image_root_path + _id + _suffix;
-				logging::debug(u8"Image", u8"完整文件路径：" + _file_path);
+				logging::debug(DEBUG_IMAGE_TAG, fmt::format(DEBUG_DOWNLOAD_FULL_IMAGE_PATH, _file_path));
 				if (_suffix == ".webp") {
 					_is_valid = _convert_webp(img_content);
 					return _is_valid;
 				}
 			}
-			catch (const TgBot::TgException& e) {
-				logging::error(u8"Image", u8"下载id为" + _id + "的图片失败，原因：" + std::string(e.what()));
-				_is_valid = false;
-				return false;
-			}
 			catch (const std::exception& e) {
-				logging::error(u8"Image", u8"下载id为" + _id + "的图片失败，原因：" + std::string(e.what()));
+				logging::error(DEBUG_IMAGE_TAG, fmt::format(DEBUG_DOWNLOAD_TG_IMAGE_FAILED,  _id, string_decode(std::string(e.what()), Encoding::ANSI)));
 				_is_valid = false;
 				return false;
 			}
 		}
 		else if (_id.empty()) {
-			logging::debug(u8"Image", u8"开始下载md5为" + _md5 + "的QQ图片");
+			logging::debug(DEBUG_IMAGE_TAG, fmt::format(DEBUG_DOWNLOAD_CQ_IMAGE, _md5));
 			try {
 				img_content = TgBot::HttpClient::getInstance().makeRequest(_url, std::vector<TgBot::HttpReqArg>());
 				_file_path = _image_root_path + _md5 + _suffix;
-				logging::debug(u8"Image", u8"完整文件路径：" + _file_path);
+				logging::debug(DEBUG_IMAGE_TAG, fmt::format(DEBUG_DOWNLOAD_FULL_IMAGE_PATH, _file_path));
 			}
 			catch (const std::exception& e) {
-				logging::error(u8"Image", u8"下载md5为" + _md5 + "的图片失败，原因：" + std::string(e.what()));
+				logging::debug(DEBUG_IMAGE_TAG, fmt::format(DEBUG_DOWNLOAD_CQ_IMAGE_FAILED, _md5, string_decode(std::string(e.what()), Encoding::ANSI)));
 				_is_valid = false;
 				return false;
 			}
@@ -271,6 +357,10 @@ namespace ctbx::image {
 		return true;
 	}
 
+	/// _convert_webp
+	/// @note   Convert image to webp format
+	/// @param  img_content Content of image
+	/// @return Boolean status of converting status
 	bool Image::_convert_webp(const std::string& img_content) {
 		std::string tmp_dir = cq::utils::ansi(cq::dir::app_tmp());
 		_file_path = tmp_dir + _id + _suffix;
@@ -287,16 +377,16 @@ namespace ctbx::image {
 			free((void*)data);
 		};
 		if (!WebPInitDecoderConfig(&config)) {
-			logging::error(u8"Image", "webp配置初始化错误。");
+			logging::warning(WARNING_CONVERT_WEBP_TAG, WARNING_CONFIG_INITIALIZE_FAILED);
 			return false;
 		}
 		if (!LoadWebP(_file_path.c_str(), &data, &data_size, bitstream)) {
-			logging::error(u8"Image", "读取webp错误，路径：" + _file_path);
+			logging::warning(WARNING_CONVERT_WEBP_TAG, fmt::format(WARNING_FILE_NOT_FOUND, _file_path));
 			return false;
 		}
 		output_buffer->colorspace = bitstream->has_alpha ? MODE_RGBA : MODE_RGB;
 		if (DecodeWebP(data, data_size, &config) != VP8_STATUS_OK) {
-			logging::error(u8"Image", "解码webp错误");
+			logging::warning(WARNING_CONVERT_WEBP_TAG, WARNING_DECODE_ERROR);
 			return false;
 		}
 		_suffix = ".png";
@@ -306,19 +396,19 @@ namespace ctbx::image {
 		return true;
 	}
 
+	/// _get_suffix
+	/// @note   Get suffix of image file (file format)
+	/// @param  tgbot Telegram bot
+	/// @return Boolean status of retriving status
 	bool Image::_get_suffix(const TgBot::Bot& tgbot) {
 		try {
 			std::shared_ptr<TgBot::File> img_file = tgbot.getApi().getFile(_id);
-			logging::debug(u8"Image", u8"返回的file_id为" + img_file->fileId);
-			logging::debug(u8"Image", u8"返回的file_path为" + img_file->filePath);
+			logging::debug(DEBUG_IMAGE_TAG, fmt::format(DEBUG_IMAGE_GET_ID, img_file->fileId));
+			logging::debug(DEBUG_IMAGE_TAG, fmt::format(DEBUG_IMAGE_GET_ID, img_file->filePath));
 			_suffix = img_file->filePath.substr(img_file->filePath.find_last_of("."));
 		}
-		catch (const TgBot::TgException& e) {
-			logging::error(u8"Image", u8"下载id为" + _id + "的图片失败，原因：" + std::string(e.what()));
-			return false;
-		}
 		catch (const std::exception& e) {
-			logging::error(u8"Image", u8"下载id为" + _id + "的图片失败，原因：" + std::string(e.what()));
+			logging::error(DEBUG_IMAGE_TAG, fmt::format(DEBUG_DOWNLOAD_TG_IMAGE_FAILED, _id, string_decode(std::string(e.what()), Encoding::ANSI)));
 			return false;
 		}
 		return true;
