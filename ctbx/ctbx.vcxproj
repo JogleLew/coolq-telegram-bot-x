@@ -254,7 +254,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_NO_ASYNCRTIMP;_NO_PPLXIMP;_SCL_SECURE_NO_WARNINGS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0A00;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_NO_ASYNCRTIMP;_NO_PPLXIMP;_SCL_SECURE_NO_WARNINGS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0A00;_CRT_SECURE_NO_WARNINGS;SPDLOG_FMT_EXTERNAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
