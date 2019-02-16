@@ -141,8 +141,8 @@ namespace ctbx::config {
 		for (auto &it : _config["Forward_List"]) {
 			std::string type = it["Type"].asString();
 			std::size_t type_len = type.size();
-			int64_t from_id = it["From"].asInt64();
-			int64_t to_id = it["To"].asInt64();
+			int64_t from_id = it["From_Group"].asInt64();
+			int64_t to_id = it["To_Group"].asInt64();
 			// C++ doesn't support string switch, sad.
 			if (type == "T<->Q") {
 				_add_forward(Group({ SOFTWARE_TYPE::TG, from_id }), Group({ SOFTWARE_TYPE::QQ, to_id }));
