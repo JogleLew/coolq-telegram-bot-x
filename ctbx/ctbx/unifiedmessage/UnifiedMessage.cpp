@@ -7,6 +7,9 @@
 
 #include "./UnifiedMessage.h"
 
+#include <locale>
+#include <codecvt>
+
 namespace types   = ctbx::types;
 namespace logging = ctbx::logging;
 namespace type    = ctbx::types;
@@ -16,6 +19,9 @@ using namespace ctbx::cards;
 using namespace ctbx::logging::UnifiedMessage;
 
 namespace ctbx::message {
+
+
+
 	/// constructor (from CoolQ message)
 	/// @note  Constructor of unified message
 	/// @param cqgmsg CoolQ message
@@ -102,7 +108,7 @@ namespace ctbx::message {
 		if (!tgmsg->caption.empty())
 			_segs.emplace_back(new UPlain(tgmsg->caption));
 		if (tgmsg->text != "") {
-			_segs.emplace_back(new UPlain(tgmsg->text));
+			_segs.emplace_back(new UPlain(_preprocess_rich_text(tgmsg)));
 		}
 	}
 
@@ -212,6 +218,26 @@ namespace ctbx::message {
 		}
 		text += ": ";
 		return text;
+	}
+
+	std::string UnifiedMessage::_preprocess_rich_text(const TgBot::Message::Ptr& tgmsg) {
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+		std::wstring text = converter.from_bytes(tgmsg->text);
+		std::string result;
+		for (auto& entity : tgmsg->entities) {
+			
+			if (entity->type == "text_link") {
+				result = std::move(
+					fmt::format("{}[{}]({}){}", 
+					converter.to_bytes(text.substr(0, entity->offset)), 
+					converter.to_bytes(text.substr(entity->offset, entity->length)), 
+					entity->url, 
+					converter.to_bytes(text.substr(entity->offset + entity->length)))
+				);
+			}
+			// ok, we dont't implement other types now. :)
+		}
+		return result;
 	}
 
 	/// _debug_remaining_msg

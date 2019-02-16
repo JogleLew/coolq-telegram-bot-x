@@ -53,6 +53,7 @@ namespace ctbx::message {
 		void send_to_tg(const int64_t, const TgBot::Bot&, ctbx::types::SOFTWARE_TYPE);
 	private:
 		std::string _parse_card();
+		std::string _preprocess_rich_text(const TgBot::Message::Ptr&);
 		void _debug_remaining_msg(const cq::Message&);
 		void _debug_all_segs();
 	};
