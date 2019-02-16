@@ -223,9 +223,8 @@ namespace ctbx::message {
 	std::string UnifiedMessage::_preprocess_rich_text(const TgBot::Message::Ptr& tgmsg) {
 		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 		std::wstring text = converter.from_bytes(tgmsg->text);
-		std::string result;
+		std::string result = tgmsg->text;
 		for (auto& entity : tgmsg->entities) {
-			
 			if (entity->type == "text_link") {
 				result = std::move(
 					fmt::format("{}[{}]({}){}", 
